@@ -51,3 +51,6 @@ Thumbs.db
 
 # Output of 'npm pack'
 *.tgz
+
+# Logs directory
+logs/

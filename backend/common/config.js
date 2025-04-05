@@ -9,6 +9,7 @@ const config = {
   ENVIRONMENT: process.env.NODE_ENV || 'development',
   HOST: process.env.HOST || 'localhost',
   PORT: process.env.PORT || 3000,
+  SWAGGER_ENABLED: process.env.SWAGGER_ENABLED || false,
 }
 
 module.exports = config;

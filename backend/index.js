@@ -1,12 +1,12 @@
 const express = require("express");
-const config = require("./config");
+const config = require("./common/config");
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
 const app = express();
 
 // Swagger setup
-if (config.ENVIRONMENT === 'development') {
+if (config.SWAGGER_ENABLED === 'true') {
   const swaggerOptions = {
     definition: {
       openapi: '3.0.0',
@@ -35,11 +35,11 @@ if (config.ENVIRONMENT === 'development') {
   };
 
   const swaggerSpec = swaggerJsdoc(swaggerOptions);
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  console.log('Swagger UI available at http://localhost:' + config.PORT + '/api-docs');
+  app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  console.log('Swagger UI available at http://localhost:' + config.PORT + '/swagger');
 }
 
-const healthCheckRouter = require("./routes/healthcheck");
+const healthCheckRouter = require("./routes/healthRoutes");
 
 app.use('/api/', healthCheckRouter);
 
