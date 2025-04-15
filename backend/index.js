@@ -2,6 +2,8 @@ const express = require("express");
 const config = require("./common/config");
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
+const mongoose = require('mongoose');
+const { cleanupVerificationCodesJob } = require('./jobs/cleanupVerificationCodesJob');
 
 const app = express();
 
@@ -39,13 +41,35 @@ if (config.SWAGGER_ENABLED === 'true') {
   console.log('Swagger UI available at http://localhost:' + config.PORT + '/swagger');
 }
 
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Connect to MongoDB
+mongoose.connect(config.MONGO_URI)
+.then(async () => {
+  console.log('MongoDB connected successfully.');
+  // Start background job for cleaning up verification codes
+  cleanupVerificationCodesJob();
+    
+  // TODO: Seed the database if needed
+
+  // Start the server
+  app.listen(config.PORT, () => {
+    console.log(`Server is running on port ${config.PORT}...`);
+  });
+
+  }).catch((err) => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
+  });
+  
+// Routes
 const healthCheckRouter = require("./routes/healthRoutes");
+const authRouter = require("./routes/authRoutes");
 
 app.use('/api/', healthCheckRouter);
-
-// Start the server
-app.listen(config.PORT, () => {
-  console.log(`Server is running on port ${config.PORT}...`);
-});
+app.use('/api/auth', authRouter);
 
 module.exports = app;
