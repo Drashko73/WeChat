@@ -24,12 +24,8 @@ if (config.SWAGGER_ENABLED === 'true') {
       },
       servers: [
         {
-          url: `http://localhost:${config.PORT}`,
-          description: 'Local development Server',
-        },
-        {
-          url: `http://${config.HOST}:${config.PORT}`,
-          description: 'Production Server',
+          url: `${config.HOST}:${config.PORT}`,
+          description: 'WeChat API Server',
         }
       ]
     },

@@ -17,7 +17,10 @@ async function sendWelcomeEmail(email, fullName) {
   // Load and process the HTML template
   const templatePath = path.join(__dirname, '../templates/welcome_email.html');
   let html = fs.readFileSync(templatePath, 'utf8');
-  html = html.replace('{{fullName}}', fullName).replace('{{year}}', new Date().getFullYear());
+  
+  html = html.replace(/{{FULLNAME}}/g, fullName)
+    .replace(/{{COPYRIGHT_YEAR}}/g, new Date().getFullYear())
+    .replace(/{{VERIFICATION_LINK}}/g, config.FRONTEND_VERIFICATION_URL);
 
   const mailOptions = {
     from: config.SMTP_USER,
