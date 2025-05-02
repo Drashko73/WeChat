@@ -102,4 +102,36 @@ router.post('/register', upload.single('profile_pic'), authController.register);
  */
 router.post('/send-verification', authController.sendVerificationCode);
 
+/**
+ * @swagger
+ * /api/auth/confirm-email:
+ *  post:
+ *    summary: Confirm email address
+ *    description: Confirm the email address using the verification code sent to the user's email.
+ *    tags: [Auth]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: johndoe@example.com
+ *              verification_code:
+ *                type: string
+ *                example: 123456
+ *    responses:
+ *      200:
+ *        description: Email confirmed successfully
+ *      400:
+ *        description: Validation error
+ *      404:
+ *        description: Verification code or user with provided email not found
+ *      500:
+ *        description: Internal server error
+ */
+router.post('/confirm-email', authController.confirmEmail);
+
 module.exports = router;

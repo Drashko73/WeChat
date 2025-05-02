@@ -25,7 +25,7 @@ async function sendWelcomeEmail(email, fullName) {
   const mailOptions = {
     from: config.SMTP_USER,
     to: email,
-    subject: 'Welcome to WeChat!',
+    subject: '(no-reply) Welcome to WeChat!',
     text: `Hello ${fullName},\n\nWelcome to WeChat! We are glad to have you on board.`,
     html
   };
@@ -40,8 +40,26 @@ async function sendVerificationCodeEmail(email, code) {
   const mailOptions = {
     from: config.SMTP_USER,
     to: email,
-    subject: 'Your WeChat Verification Code',
+    subject: '(no-reply) Your WeChat Verification Code',
     text: `Your WeChat verification code is: ${code}`,
+    html
+  };
+  await transporter.sendMail(mailOptions);
+}
+
+async function sendEmailConfirmationEmail(email, fullName) {
+  const templatePath = path.join(__dirname, '../templates/successful_email_confirmation.html');
+  let html = fs.readFileSync(templatePath, 'utf8');
+  
+  html = html.replace(/{{FULLNAME}}/g, fullName)
+    .replace(/{{COPYRIGHT_YEAR}}/g, new Date().getFullYear())
+    .replace(/{{LOGIN_LINK}}/g, config.FRONTEND_LOGIN_URL);
+
+  const mailOptions = {
+    from: config.SMTP_USER,
+    to: email,
+    subject: '(no-reply) Successfully Confirmed Email Address',
+    text: `Hello ${fullName},\n\nYour email address has been confirmed.`,
     html
   };
   await transporter.sendMail(mailOptions);
@@ -49,5 +67,6 @@ async function sendVerificationCodeEmail(email, code) {
 
 module.exports = {
   sendWelcomeEmail,
-  sendVerificationCodeEmail
+  sendVerificationCodeEmail,
+  sendEmailConfirmationEmail
 };

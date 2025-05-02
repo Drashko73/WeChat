@@ -61,13 +61,13 @@ async function sendVerificationCode(email) {
   }
 
   // Check if user is already verified
-  if (user.isVerified) {
-    return { error: 'User is already verified', status: 400 };
+  if (user.email_confirmed) {
+    return { error: 'User has already verified email address.', status: 400 };
   }
 
   // Check if user is deleted
   if (user.is_deleted) {
-    return { error: 'User is deleted', status: 400 };
+    return { error: 'User is deleted.', status: 400 };
   }
 
   // Check if verification code already exists
@@ -96,6 +96,73 @@ async function sendVerificationCode(email) {
   return { message: 'Verification code sent successfully', status: 200 };
 }
 
+async function confirmEmail(email, code) {
+  // Validate input
+  if (!email || !code) {
+    return { error: 'Email and code are required', status: 400 };
+  }
+
+  if (!validators.validateEmailAddress(email)) {
+    return { error: 'Invalid email format', status: 400 };
+  }
+
+  if (!validators.validateVerificationCode(code)) {
+    return { error: 'Invalid verification code format', status: 400 };
+  }
+
+  // Check if user with this email exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    return { error: 'User not found', status: 404 };
+  }
+
+  // Check if user is already verified
+  if (user.email_confirmed) {
+    return { error: 'User has already verified email address.', status: 400 };
+  }
+
+  // Check if user is deleted
+  if (user.is_deleted) {
+    return { error: 'User is deleted.', status: 400 };
+  }
+
+  // Check if verification code exists
+  const verificationCode = await VerificationCode.findOne({ email: email });
+  if (!verificationCode) {
+    return { error: 'Verification code not found', status: 404 };
+  }
+  
+  // Check if code is expired
+  const now = new Date();
+  if (verificationCode.expiresAt < now) {
+    return { error: 'Verification code expired', status: 400 };
+  }
+
+  // Check if code is used
+  if (verificationCode.used) {
+    return { error: 'Verification code already used', status: 400 };
+  }
+
+  // Check if code is correct
+  const encryptedCode = crypto.createHash('sha256').update(code).digest('hex');
+  if (verificationCode.code !== encryptedCode) {
+    return { error: 'Invalid verification code', status: 400 };
+  }
+
+  // Mark code as used
+  verificationCode.used = true;
+  await verificationCode.save();
+
+  // Update user as verified
+  user.email_confirmed = true;
+  await user.save();
+
+  // Send confirmation email
+  emailSender.sendEmailConfirmationEmail(user.email, user.full_name).catch(console.error);
+  
+  return { message: 'Email confirmed successfully', status: 200 };
+}
+
 async function getUserByEmail(email) {  
   return await User.findOne({ email });
 };
@@ -103,5 +170,6 @@ async function getUserByEmail(email) {
 module.exports = { 
   registerUser,
   sendVerificationCode,
-  getUserByEmail
+  confirmEmail,
+  getUserByEmail,
 };

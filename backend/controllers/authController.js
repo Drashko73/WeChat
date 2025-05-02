@@ -51,3 +51,17 @@ exports.sendVerificationCode = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.confirmEmail = async (req, res) => {
+  try {
+    let resp = await authService.confirmEmail(req.body.email, req.body.verification_code);
+    if (resp.error) {
+      return res.status(resp.status).json({ message: resp.error });
+    }
+
+    return res.status(200).json({ message: resp.message });
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}

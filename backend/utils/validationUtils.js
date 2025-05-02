@@ -1,3 +1,5 @@
+const config = require('../common/config');
+
 function validateFullName(fullName) {
   const nameRegex = /^[A-Z][a-z]{1,}\s[A-Z][a-z]{1,}$/;
 
@@ -16,8 +18,16 @@ function validateUsername(username) {
   return usernameRegex.test(username);
 }
 
+function validateVerificationCode(code) {
+  const codeLength = config.VERIFICATION_CODE_LENGTH;
+  const codeRegex = new RegExp(`^[0-9]{${codeLength}}$`);
+
+  return codeRegex.test(code);
+}
+
 module.exports = {
   validateFullName,
   validateEmailAddress,
-  validateUsername
+  validateUsername,
+  validateVerificationCode
 }
