@@ -239,4 +239,68 @@ router.post('/login', authController.login);
  */
 router.post('/refresh', authController.refresh);
 
+/**
+ * @swagger
+ * /api/auth/request-password-reset:
+ *  post:
+ *    summary: Request password reset code
+ *    description: Sends a password reset code to the user's email
+ *    tags: [Auth]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: user@example.com
+ *    responses:
+ *      200:
+ *        description: Password reset code sent successfully
+ *      400:
+ *        description: Validation error or email not verified
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal server error
+ */
+router.post('/request-password-reset', authController.requestPasswordReset);
+
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *  post:
+ *    summary: Reset user password
+ *    description: Reset user password with verification code
+ *    tags: [Auth]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: user@example.com
+ *              code:
+ *                type: string
+ *                example: 123456
+ *              new_password:
+ *                type: string
+ *                example: NewStrongPassword123!
+ *    responses:
+ *      200:
+ *        description: Password reset successfully
+ *      400:
+ *        description: Validation error, invalid code, or expired code
+ *      404:
+ *        description: User not found or reset code not found
+ *      500:
+ *        description: Internal server error
+ */
+router.post('/reset-password', authController.resetPassword);
+
 module.exports = router;

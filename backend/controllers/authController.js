@@ -113,3 +113,35 @@ exports.refresh = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.requestPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const result = await authService.requestPasswordReset(email);
+
+    if (result.error) {
+      return res.status(result.status).json({ message: result.error });
+    }
+
+    return res.status(200).json({ message: 'Password reset code sent successfully' });
+  } catch (err) {
+    console.error('Password reset request error:', err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, code, new_password } = req.body;
+    const result = await authService.resetPassword(email, code, new_password);
+
+    if (result.error) {
+      return res.status(result.status).json({ message: result.error });
+    }
+
+    return res.status(200).json({ message: 'Password reset successfully' });
+  } catch (err) {
+    console.error('Password reset error:', err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};

@@ -5,6 +5,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const mongoose = require('mongoose');
 const { cleanupVerificationCodesJob } = require('./jobs/cleanupVerificationCodesJob');
 const { cleanupRefreshTokensJob } = require('./jobs/cleanupRefreshTokensJob');
+const { cleanupPasswordResetCodesJob } = require('./jobs/cleanupPasswordResetCodesJob');
 const initializePassport = require('./middlewares/passport');
 
 const app = express();
@@ -66,6 +67,9 @@ mongoose.connect(config.MONGO_URI)
 
   // Start background job for cleaning up refresh tokens
   cleanupRefreshTokensJob();
+
+  // Start background job for cleaning up password reset codes
+  cleanupPasswordResetCodesJob();
     
   // TODO: Seed the database if needed
 

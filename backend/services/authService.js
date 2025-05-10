@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const RefreshToken = require('../models/refreshToken');
 const VerificationCode = require('../models/verificationCode');
+const PasswordResetCode = require('../models/passwordResetCode');
 const crypto = require('crypto');
 const validators = require('../utils/validationUtils');
 const emailSender = require('../utils/sendMail');
@@ -301,11 +302,140 @@ async function getUserByEmail(email) {
   return await User.findOne({ email });
 };
 
+async function requestPasswordReset(email) {
+  if (!email) {
+    return { error: 'Email is required', status: 400 };
+  }
+  if (!validators.validateEmailAddress(email)) {
+    return { error: 'Invalid email format', status: 400 };
+  }
+
+  // Check if user with this email exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    return { error: 'User not found', status: 404 };
+  }
+
+  // Check if user email is confirmed
+  if (!user.email_confirmed) {
+    return { error: 'Email address is not verified', status: 400 };
+  }
+
+  // Check if user is deleted
+  if (user.is_deleted) {
+    return { error: 'User is deleted', status: 400 };
+  }
+
+  // Check if password reset code already exists and is not expired nor used
+  // In this case, delete the old code
+  const oldCode = await PasswordResetCode.findOne({ email: email });
+  if (oldCode) {
+    const now = new Date();
+    if (oldCode.expiresAt > now && !oldCode.used) {
+      await PasswordResetCode.deleteOne({ email: email });
+    }
+  }
+
+  // Generate new password reset code
+  const codeLength = parseInt(config.PASSWORD_RESET_CODE_LENGTH || config.VERIFICATION_CODE_LENGTH, 10);
+  const code = Array.from({ length: codeLength }, () => Math.floor(Math.random() * 10)).join('');
+  
+  // Encrypt code
+  const encryptedCode = crypto.createHash('sha256').update(code).digest('hex');
+  
+  // Set expiration
+  const expirationMinutes = parseInt(config.PASSWORD_RESET_CODE_EXPIRATION_MINUTES || 30, 10);
+  const expiresAt = new Date(Date.now() + expirationMinutes * 60000);
+  
+  // Save to DB
+  await PasswordResetCode.create({ email: email, code: encryptedCode, expiresAt });
+  
+  // Send code via email
+  emailSender.sendPasswordResetCodeEmail(email, code, expirationMinutes).catch(console.error);
+
+  return { message: 'Password reset code sent successfully', status: 200 };
+}
+
+async function resetPassword(email, code, newPassword) {
+  // Validate input
+  if (!email || !code || !newPassword) {
+    return { error: 'Email, code and new password are required', status: 400 };
+  }
+
+  if (!validators.validateEmailAddress(email)) {
+    return { error: 'Invalid email format', status: 400 };
+  }
+
+  if (!validators.validatePasswordResetCode(code)) {
+    return { error: 'Invalid reset code format', status: 400 };
+  }
+
+  // Check if user with this email exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    return { error: 'User not found', status: 404 };
+  }
+
+  // Check if user email is confirmed
+  if (!user.email_confirmed) {
+    return { error: 'Email address is not verified', status: 400 };
+  }
+
+  // Check if user is deleted
+  if (user.is_deleted) {
+    return { error: 'User is deleted', status: 400 };
+  }
+
+  // Validate new password
+  if (!validators.validatePassword(newPassword, user.username, user.full_name)) {
+    return { error: 'Invalid password format', status: 400 };
+  }
+
+  // Check if password reset code exists
+  const passwordResetCode = await PasswordResetCode.findOne({ email });
+  if (!passwordResetCode) {
+    return { error: 'Password reset code not found', status: 404 };
+  }
+
+  // Check if code is expired
+  const now = new Date();
+  if (passwordResetCode.expiresAt < now) {
+    return { error: 'Password reset code expired', status: 400 };
+  }
+
+  // Check if code is used
+  if (passwordResetCode.used) {
+    return { error: 'Password reset code already used', status: 400 };
+  }
+
+  // Check if code is correct
+  const encryptedCode = crypto.createHash('sha256').update(code).digest('hex');
+  if (passwordResetCode.code !== encryptedCode) {
+    return { error: 'Invalid password reset code', status: 400 };
+  }
+
+  // Mark code as used
+  passwordResetCode.used = true;
+  await passwordResetCode.save();
+
+  // Update user password
+  await user.setPassword(newPassword);
+  user.updated_at = new Date();
+  await user.save();
+
+  // Send password changed confirmation email
+  emailSender.sendPasswordChangedEmail(user.email, user.full_name).catch(console.error);
+
+  return { message: 'Password reset successfully', status: 200 };
+}
+
 module.exports = { 
   registerUser,
   sendVerificationCode,
   confirmEmail,
   loginUser,
   getUserByEmail,
-  refreshToken
+  refreshToken,
+  requestPasswordReset,
+  resetPassword
 };

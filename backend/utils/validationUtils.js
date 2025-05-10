@@ -25,6 +25,13 @@ function validateVerificationCode(code) {
   return codeRegex.test(code);
 }
 
+function validatePasswordResetCode(code) {
+  const codeLength = config.PASSWORD_RESET_CODE_LENGTH || config.VERIFICATION_CODE_LENGTH;
+  const codeRegex = new RegExp(`^[0-9]{${codeLength}}$`);
+
+  return codeRegex.test(code);
+}
+
 function validatePassword(password, username = '', fullName = '') {
   // Check password length (8-50 characters)
   if (password.length < 8 || password.length > 50) {
@@ -82,5 +89,6 @@ module.exports = {
   validateEmailAddress,
   validateUsername,
   validateVerificationCode,
+  validatePasswordResetCode,
   validatePassword,
 }
