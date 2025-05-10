@@ -5,6 +5,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const mongoose = require('mongoose');
 const { cleanupVerificationCodesJob } = require('./jobs/cleanupVerificationCodesJob');
 const { cleanupRefreshTokensJob } = require('./jobs/cleanupRefreshTokensJob');
+const initializePassport = require('./middlewares/passport');
 
 const app = express();
 
@@ -28,7 +29,16 @@ if (config.SWAGGER_ENABLED === 'true') {
           url: `${config.HOST}:${config.PORT}`,
           description: 'WeChat API Server',
         }
-      ]
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          }
+        }
+      }
     },
     apis: ['./routes/*.js'],
   };
@@ -42,6 +52,10 @@ if (config.SWAGGER_ENABLED === 'true') {
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Initialize Passport
+const passport = initializePassport();
+app.use(passport.initialize());
 
 // Connect to MongoDB
 mongoose.connect(config.MONGO_URI)
@@ -68,8 +82,10 @@ mongoose.connect(config.MONGO_URI)
 // Routes
 const healthCheckRouter = require("./routes/healthRoutes");
 const authRouter = require("./routes/authRoutes");
+const protectedRouter = require("./routes/protectedRoutes");
 
 app.use('/api/', healthCheckRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/protected', protectedRouter);
 
 module.exports = app;
