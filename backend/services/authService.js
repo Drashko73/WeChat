@@ -209,13 +209,12 @@ async function loginUser(email, password, deviceIdHeader) {
 
   // Generate access token
   access_token = user.generateAccessToken();
-
   // Generate refresh token
   // Check if refresh token already exists
   // Token must not be used, expired and must belong to
   // the same user and device
   const existingRefreshToken = await RefreshToken.findOne({ 
-    $or: [
+    $and: [
       { userId: user._id },
       { deviceId: deviceIdHeader },
       { used: false },
@@ -228,7 +227,7 @@ async function loginUser(email, password, deviceIdHeader) {
     refresh_token = existingRefreshToken.token;
   }
   else {
-    refresh_token = user.generateRefreshToken(deviceIdHeader);
+    refresh_token = user.generateRefreshToken();
     const expiresAt = new Date(Date.now() + parseInt(config.REFRESH_TOKEN_EXPIRATION_MINUTES, 10) * 60000);
     await RefreshToken.create({ 
       userId: user._id,
@@ -242,6 +241,62 @@ async function loginUser(email, password, deviceIdHeader) {
   return { access_token, refresh_token };
 }
 
+async function refreshToken(refreshTokenValue, deviceId) {
+  // Validate inputs
+  if (!refreshTokenValue) {
+    return { error: 'Refresh token is required', status: 400 };
+  }
+  if (!deviceId) {
+    return { error: 'Device ID is required', status: 400 };
+  }
+
+  try {
+    // Find the refresh token in the database
+    const refreshTokenDoc = await RefreshToken.findOne({ 
+      token: refreshTokenValue,
+      deviceId: deviceId,
+      used: false,
+      expiresAt: { $gt: new Date() }
+    });
+
+    // If no valid token found, return error
+    if (!refreshTokenDoc) {
+      return { error: 'Invalid or expired refresh token', status: 401 };
+    }
+
+    // Find the user associated with the token
+    const user = await User.findById(refreshTokenDoc.userId);
+    if (!user || user.is_deleted || !user.email_confirmed) {
+      return { error: 'User not found or unavailable', status: 404 };
+    }
+
+    // Mark the current refresh token as used
+    refreshTokenDoc.used = true;
+    await refreshTokenDoc.save();
+
+    // Generate a new access token
+    const access_token = user.generateAccessToken();
+
+    // Generate a new refresh token
+    const refresh_token = user.generateRefreshToken();
+    const expiresAt = new Date(Date.now() + parseInt(config.REFRESH_TOKEN_EXPIRATION_MINUTES, 10) * 60000);
+    
+    // Save the new refresh token
+    await RefreshToken.create({
+      userId: user._id,
+      deviceId: deviceId,
+      token: refresh_token,
+      expiresAt: expiresAt,
+      used: false
+    });
+
+    return { access_token, refresh_token };
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    return { error: 'Internal server error', status: 500 };
+  }
+}
+
 async function getUserByEmail(email) {  
   return await User.findOne({ email });
 };
@@ -252,4 +307,5 @@ module.exports = {
   confirmEmail,
   loginUser,
   getUserByEmail,
+  refreshToken
 };

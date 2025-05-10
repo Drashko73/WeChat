@@ -187,4 +187,56 @@ router.post('/confirm-email', authController.confirmEmail);
  */
 router.post('/login', authController.login);
 
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *  post:
+ *    summary: Refresh access token
+ *    description: Get a new access token using a refresh token
+ *    tags: [Auth]
+ *    parameters:
+ *      - in: header
+ *        name: X-Device-ID
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Unique identifier for the device, must match the device that was used to get the refresh token
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              refresh_token:
+ *                type: string
+ *                example: 7b12f8f64a234b29be732e998520ea89
+ *    responses:
+ *      200:
+ *        description: Token refreshed successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: Token refreshed successfully
+ *                access_token:
+ *                  type: string
+ *                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                refresh_token:
+ *                  type: string
+ *                  example: 89eda4c37b91af84ce734e9a0d34e123
+ *      400:
+ *        description: Bad request - missing refresh token or device ID
+ *      401:
+ *        description: Unauthorized - invalid, expired or used refresh token
+ *      404:
+ *        description: User not found or unavailable
+ *      500:
+ *        description: Internal server error
+ */
+router.post('/refresh', authController.refresh);
+
 module.exports = router;

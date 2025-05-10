@@ -87,3 +87,29 @@ exports.login = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+exports.refresh = async (req, res) => {
+  try {
+    const { refresh_token } = req.body;
+    const deviceId = req.headers['x-device-id'];
+
+    if (!deviceId) {
+      return res.status(400).json({ message: 'X-Device-ID header is required' });
+    }
+
+    const result = await authService.refreshToken(refresh_token, deviceId);
+    
+    if (result.error) {
+      return res.status(result.status).json({ message: result.error });
+    }
+
+    return res.status(200).json({
+      message: 'Token refreshed successfully',
+      access_token: result.access_token, 
+      refresh_token: result.refresh_token
+    });
+  } catch (err) {
+    console.error('Token refresh error:', err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
