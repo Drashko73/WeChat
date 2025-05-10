@@ -96,7 +96,7 @@ router.post('/register', upload.single('profile_pic'), authController.register);
  *       200:
  *         description: Verification code sent
  *       400:
- *         description: Validation error
+ *         description: Validation error or X-Device-ID header missing
  *       500:
  *         description: Internal server error
  */
@@ -133,5 +133,58 @@ router.post('/send-verification', authController.sendVerificationCode);
  *        description: Internal server error
  */
 router.post('/confirm-email', authController.confirmEmail);
+
+/**
+ * @swagger
+ * /api/auth/login:
+ *  post:
+ *    summary: User login
+ *    description: Login a user with email and password.
+ *    tags: [Auth]
+ *    parameters:
+ *      - in: header
+ *        name: X-Device-ID
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Unique identifier for the device
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: johndoe@example.com
+ *              password:
+ *                type: string
+ *                example: StrongPassword123
+ *    responses:
+ *      200:
+ *        description: User logged in successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: User logged in successfully
+ *                access_token:
+ *                  type: string
+ *                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                refresh_token:
+ *                  type: string
+ *                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *      400:
+ *        description: Validation error
+ *      401:
+ *        description: Invalid credentials
+ *      500:
+ *        description: Internal server error
+ */
+router.post('/login', authController.login);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const RefreshToken = require('../models/refreshToken');
 const VerificationCode = require('../models/verificationCode');
 const crypto = require('crypto');
 const validators = require('../utils/validationUtils');
@@ -18,6 +19,9 @@ async function registerUser(full_name, email, username, password, profile_pic_pa
   }
   if (!validators.validateUsername(username)) {
     return { error: 'Invalid username format', status: 400 };
+  }
+  if (!validators.validatePassword(password, username, full_name)) {
+    return { error: 'Invalid password format', status: 400 };
   }
 
   // Check for unique email and username
@@ -163,6 +167,81 @@ async function confirmEmail(email, code) {
   return { message: 'Email confirmed successfully', status: 200 };
 }
 
+async function loginUser(email, password, deviceIdHeader) {
+  // Check if device ID is provided in the request HEADER
+  // If not, return error immediately
+  if(!deviceIdHeader) {
+    return { error: 'Device ID is required', status: 400 };
+  }
+  
+  // Validate input
+  if (!email || !password) {
+    return { error: 'Email and password are required', status: 400 };
+  }
+  if (!validators.validateEmailAddress(email)) {
+    return { error: 'Invalid email format', status: 400 };
+  }
+  if (!validators.validatePassword(password)) {
+    return { error: 'Invalid password format', status: 400 };
+  }
+
+  // Check if user with this email exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    return { error: 'User not found', status: 404 };
+  }
+
+  // Check if user is deleted
+  if (user.is_deleted) {
+    return { error: 'User is deleted.', status: 400 };
+  }
+
+  // Check if user has confirmed email address
+  if (!user.email_confirmed) {
+    return { error: 'User has not confirmed email address.', status: 400 };
+  }
+
+  // Check if password is correct
+  const isPasswordValid = await user.validatePassword(password);
+  if (!isPasswordValid) {
+    return { error: 'Invalid password', status: 401 };
+  }
+
+  // Generate access token
+  access_token = user.generateAccessToken();
+
+  // Generate refresh token
+  // Check if refresh token already exists
+  // Token must not be used, expired and must belong to
+  // the same user and device
+  const existingRefreshToken = await RefreshToken.findOne({ 
+    $or: [
+      { userId: user._id },
+      { deviceId: deviceIdHeader },
+      { used: false },
+      { expiresAt: { $gt: new Date() } }
+    ]
+  });
+
+  let refresh_token;
+  if (existingRefreshToken) {
+    refresh_token = existingRefreshToken.token;
+  }
+  else {
+    refresh_token = user.generateRefreshToken(deviceIdHeader);
+    const expiresAt = new Date(Date.now() + parseInt(config.REFRESH_TOKEN_EXPIRATION_MINUTES, 10) * 60000);
+    await RefreshToken.create({ 
+      userId: user._id,
+      deviceId: deviceIdHeader,
+      token: refresh_token,
+      expiresAt: expiresAt,
+      used: false
+    });
+  }
+
+  return { access_token, refresh_token };
+}
+
 async function getUserByEmail(email) {  
   return await User.findOne({ email });
 };
@@ -171,5 +250,6 @@ module.exports = {
   registerUser,
   sendVerificationCode,
   confirmEmail,
+  loginUser,
   getUserByEmail,
 };

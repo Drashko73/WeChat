@@ -4,6 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const mongoose = require('mongoose');
 const { cleanupVerificationCodesJob } = require('./jobs/cleanupVerificationCodesJob');
+const { cleanupRefreshTokensJob } = require('./jobs/cleanupRefreshTokensJob');
 
 const app = express();
 
@@ -48,6 +49,9 @@ mongoose.connect(config.MONGO_URI)
   console.log('MongoDB connected successfully.');
   // Start background job for cleaning up verification codes
   cleanupVerificationCodesJob();
+
+  // Start background job for cleaning up refresh tokens
+  cleanupRefreshTokensJob();
     
   // TODO: Seed the database if needed
 

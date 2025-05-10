@@ -12,7 +12,7 @@ function cleanupVerificationCodesJob() {
       ]
     });
     // Optionally log cleanup
-    console.log('Cleanup executed at:', now);
+    console.log('[VC Cleanup Job] Executed at:', now);
     } catch (err) {
       console.error('Verification code cleanup error:', err);
     }

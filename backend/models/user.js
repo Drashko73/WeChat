@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const validators = require('../utils/validationUtils');
 const bcrypt = require('bcrypt');
 const config = require('../common/config');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const UserSchema = new mongoose.Schema({
   full_name: {
@@ -78,6 +80,30 @@ UserSchema.methods.setPassword = async function(password) {
 
 UserSchema.methods.validatePassword = async function(password) {
   return await bcrypt.compare(password, this.password_hash);
+}
+
+UserSchema.methods.generateAccessToken = function() {
+  return jwt.sign({
+    id: this._id,
+    email: this.email,
+    username: this.username,
+    full_name: this.full_name,
+    email_confirmed: this.email_confirmed,
+    is_deleted: this.is_deleted,
+    created_at: this.created_at,
+    updated_at: this.updated_at
+  }, config.JWT_SECRET_KEY, {
+    expiresIn: config.JWT_EXPIRATION_TIME,
+    algorithm: config.JWT_ALGORITHM,
+    issuer: config.JWT_ISSUER
+  });
+}
+
+UserSchema.methods.generateRefreshToken = function() {
+  // Generate a cryptographically secure random token
+  // Default length: 32 bytes (256 bits)
+  const tokenLength = config.REFRESH_TOKEN_LENGTH || 32;
+  return crypto.randomBytes(tokenLength).toString('hex');
 }
 
 const UserModel = mongoose.model('User', UserSchema);

@@ -19,6 +19,12 @@ const config = {
   VERIFICATION_CODE_CLEANUP_INTERVAL_MINUTES: process.env.VERIFICATION_CODE_CLEANUP_INTERVAL_MINUTES || 10,
   FRONTEND_VERIFICATION_URL: process.env.FRONTEND_VERIFICATION_URL || 'http://localhost:3000/verify-email',
   FRONTEND_LOGIN_URL: process.env.FRONTEND_LOGIN_URL || 'http://localhost:3000/login',
+  REFRESH_TOKEN_CLEANUP_INTERVAL_MINUTES: process.env.REFRESH_TOKEN_CLEANUP_INTERVAL_MINUTES || 60,
+  JWT_SECRET_KEY: process.env.JWT_SECRET || 'supersecretkeythatisverylongandsecurexd',
+  JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME || '15m',
+  JWT_ALGORITHM: process.env.JWT_ALGORITHM || 'HS256',
+  JWT_ISSUER: process.env.JWT_ISSUER || 'WeChat',
+  REFRESH_TOKEN_EXPIRATION_MINUTES: process.env.REFRESH_TOKEN_EXPIRATION_MINUTES || 10080, // 7 days
 }
 
 module.exports = config;

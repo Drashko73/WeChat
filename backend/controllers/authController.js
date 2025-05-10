@@ -65,3 +65,25 @@ exports.confirmEmail = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const deviceIdHeader = req.headers['x-device-id'];
+
+    let resp = await authService.loginUser(email, password, deviceIdHeader);
+
+    if (resp.error) {
+      return res.status(resp.status).json({ message: resp.error });
+    }
+
+    return res.status(200).json({
+      message: "User logged in successfully",
+      access_token: resp.access_token,
+      refresh_token: resp.refresh_token,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
