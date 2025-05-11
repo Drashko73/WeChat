@@ -104,7 +104,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
     }
 
     /* For screens near edges, ensure dropdown is visible */
-    @media (max-width: 480px) {
+    @media (max-width: 767px) {
       .dropdown-menu {
         position: fixed;
         top: auto;
