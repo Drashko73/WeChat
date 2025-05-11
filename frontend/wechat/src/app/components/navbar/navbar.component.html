@@ -1,21 +1,21 @@
-<nav class="bg-indigo-600 shadow-lg">
+<nav class="bg-indigo-600 dark:bg-indigo-900 shadow-lg">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
-        <a routerLink="/" class="text-white font-bold text-xl">WeChat</a>
+        <a routerLink="/" class="text-white dark:text-white font-bold text-xl">WeChat</a>
       </div>
-      
-      <!-- Desktop Menu (hidden on mobile) -->
+        <!-- Desktop Menu (hidden on mobile) -->
       <div class="hidden md:flex items-center">
         <div class="flex space-x-4 items-center mr-4">
-          <a routerLink="/" class="text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium" routerLinkActive="bg-indigo-700" [routerLinkActiveOptions]="{exact: true}">Home</a>
-          <a routerLink="/features" class="text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium" routerLinkActive="bg-indigo-700">Features</a>
-          <a routerLink="/about" class="text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium" routerLinkActive="bg-indigo-700">About</a>
+          <a routerLink="/" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" [routerLinkActiveOptions]="{exact: true}">Home</a>
+          <a routerLink="/features" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600">Features</a>
+          <a routerLink="/about" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600">About</a>
+          <app-theme-toggle></app-theme-toggle>
         </div>
         <div class="flex items-center space-x-2">
-          <a routerLink="/login" class="text-white hover:bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium">Login</a>
-          <a routerLink="/register" class="bg-white text-indigo-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Sign Up</a>
+          <a routerLink="/login" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
+          <a routerLink="/register" class="bg-white dark:bg-gray-100 text-indigo-600 hover:bg-gray-100 dark:hover:bg-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Sign Up</a>
         </div>
       </div>
       
@@ -34,15 +34,16 @@
         </button>
       </div>
     </div>
-    
-    <!-- Mobile Menu (only visible when toggled) -->
+      <!-- Mobile Menu (only visible when toggled) -->
     <div *ngIf="isMobileMenuOpen" class="md:hidden" id="mobile-menu">
-      <div class="px-2 pt-2 pb-3 space-y-1 border-t border-indigo-500">
-        <a routerLink="/" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700" routerLinkActive="bg-indigo-700" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMobileMenu()">Home</a>
-        <a routerLink="/features" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700" routerLinkActive="bg-indigo-700" (click)="toggleMobileMenu()">Features</a>
-        <a routerLink="/about" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700" routerLinkActive="bg-indigo-700" (click)="toggleMobileMenu()">About</a>
-        <a routerLink="/login" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700" routerLinkActive="bg-indigo-700" (click)="toggleMobileMenu()">Login</a>
-        <a routerLink="/register" class="bg-white text-indigo-600 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100" (click)="toggleMobileMenu()">Sign Up</a>
+      <div class="px-2 pt-2 pb-3 space-y-1 border-t border-indigo-500 dark:border-indigo-400">        <a routerLink="/" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMobileMenu()">Home</a>
+        <a routerLink="/features" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" (click)="toggleMobileMenu()">Features</a>
+        <a routerLink="/about" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" (click)="toggleMobileMenu()">About</a>
+        <div class="px-3 py-2">
+          <app-theme-toggle></app-theme-toggle>
+        </div>
+        <a routerLink="/login" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" (click)="toggleMobileMenu()">Login</a>
+        <a routerLink="/register" class="bg-white dark:bg-gray-100 text-indigo-600 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-white transition-colors" (click)="toggleMobileMenu()">Sign Up</a>
       </div>
     </div>
   </div>

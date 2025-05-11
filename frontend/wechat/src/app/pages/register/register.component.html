@@ -1,12 +1,12 @@
-<div class="min-h-[calc(100vh-12rem)] flex items-center justify-center bg-gray-50 py-8 px-4 sm:py-10 sm:px-6 lg:py-12 lg:px-8">
+<div class="min-h-[calc(100vh-12rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:py-10 sm:px-6 lg:py-12 lg:px-8">
   <div class="max-w-md w-full space-y-6 sm:space-y-8">
     <div class="text-center">
-      <h2 class="mt-2 sm:mt-6 text-2xl sm:text-3xl font-extrabold text-gray-900">
+      <h2 class="mt-2 sm:mt-6 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
         Create your account
       </h2>
-      <p class="mt-2 text-sm text-gray-600">
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
         Or
-        <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+        <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
           sign in to your existing account
         </a>
       </p>
@@ -15,28 +15,29 @@
       <div class="rounded-md shadow-sm space-y-3">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+            <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
             <input
               id="firstName"
               name="firstName"
               type="text"
               formControlName="firstName"
               required
-              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 text-sm transition-colors"
               placeholder="First Name"
             />
             <div *ngIf="registerForm.get('firstName')?.invalid && (registerForm.get('firstName')?.dirty || registerForm.get('firstName')?.touched)" class="text-red-500 text-xs mt-1">
               <div *ngIf="registerForm.get('firstName')?.errors?.['required']">First name is required.</div>
             </div>
-          </div>          <div>
-            <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+          </div>
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
             <input
               id="lastName"
               name="lastName"
               type="text"
               formControlName="lastName"
               required
-              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 text-sm transition-colors" 
               placeholder="Last Name"
             />
             <div *ngIf="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || registerForm.get('lastName')?.touched)" class="text-red-500 text-xs mt-1">
@@ -46,7 +47,7 @@
         </div>
         
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email address</label>
           <input
             id="email"
             name="email"
@@ -54,7 +55,7 @@
             formControlName="email"
             autocomplete="email"
             required
-            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
             placeholder="Email address"
           />
           <div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
@@ -64,14 +65,14 @@
         </div>
         
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+          <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
           <input
             id="username"
             name="username"
             type="text"
             formControlName="username"
             required
-            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
             placeholder="Username"
           />
           <div *ngIf="registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)" class="text-red-500 text-xs mt-1">
@@ -81,14 +82,14 @@
         </div>
         
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
           <input
             id="password"
             name="password"
             type="password"
             formControlName="password"
             required
-            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
             placeholder="Password"
           />
           <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)" class="text-red-500 text-xs mt-1">
@@ -105,7 +106,7 @@
             type="password"
             formControlName="confirmPassword"
             required
-            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
             placeholder="Confirm Password"
           />
           <div *ngIf="registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched)" class="text-red-500 text-xs mt-1">
@@ -115,7 +116,8 @@
             Passwords do not match.
           </div>
         </div>
-      </div>      <div class="flex items-start">
+      </div>
+      <div class="flex items-start">
         <div class="flex items-center h-5">
           <input
             id="termsAndConditions"
@@ -123,25 +125,26 @@
             type="checkbox"
             formControlName="termsAndConditions"
             required
-            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            class="h-4 w-4 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-400 border-gray-300 dark:border-gray-600 rounded"
           />
         </div>
         <div class="ml-2 text-sm">
-          <label for="termsAndConditions" class="text-gray-900">
+          <label for="termsAndConditions" class="text-gray-900 dark:text-gray-300">
             I agree to the
-            <a href="#" class="text-indigo-600 hover:text-indigo-500">Terms of Service</a>
+            <a href="#" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">Terms of Service</a>
             and
-            <a href="#" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+            <a href="#" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">Privacy Policy</a>
           </label>
         </div>
       </div>
       <div *ngIf="registerForm.get('termsAndConditions')?.invalid && (registerForm.get('termsAndConditions')?.dirty || registerForm.get('termsAndConditions')?.touched)" class="text-red-500 text-xs">
         <div *ngIf="registerForm.get('termsAndConditions')?.errors?.['required']">You must agree to the terms and conditions.</div>
-      </div>      <div class="mt-2">
+      </div>
+      <div class="mt-2">
         <button
           type="submit"
           [disabled]="registerForm.invalid"
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <span class="absolute left-0 inset-y-0 flex items-center pl-3">
             <svg
