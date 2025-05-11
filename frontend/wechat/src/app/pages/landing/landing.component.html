@@ -1,21 +1,23 @@
 <!-- Hero Section -->
 <section class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-900 dark:to-purple-950 text-white transition-colors">
-  <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 sm:py-16 lg:py-24 lg:px-8">
+  <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 sm:py-16 lg:py-24 lg:px-8" [@fadeInAnimation]>
     <div class="flex flex-col md:flex-row items-center">
       <div class="w-full md:w-1/2 mb-8 md:mb-0">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
-          Connect Instantly With WeChat
-        </h1>
-        <p class="text-base sm:text-lg mb-6 opacity-90">
-          Experience real-time communication like never before. Chat, share, connect with friends and family around the world.
-        </p>
-        <div class="flex flex-wrap gap-3">
-          <a routerLink="/register" class="bg-white dark:bg-gray-800 text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium shadow-md text-sm sm:text-base transition-colors">
-            Get Started Free
-          </a>
-          <a routerLink="/login" class="border border-white hover:bg-white/10 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base transition-colors">
-            Sign In
-          </a>
+        <div [@staggerFadeIn]>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
+            Connect Instantly With WeChat
+          </h1>
+          <p class="text-base sm:text-lg mb-6 opacity-90">
+            Experience real-time communication like never before. Chat, share, connect with friends and family around the world.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a routerLink="/register" class="bg-white dark:bg-gray-800 text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium shadow-md text-sm sm:text-base transition-colors">
+              Get Started Free
+            </a>
+            <a routerLink="/login" class="border border-white hover:bg-white/10 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base transition-colors">
+              Sign In
+            </a>
+          </div>
         </div>
       </div>
       <div class="w-full md:w-1/2 px-4">
