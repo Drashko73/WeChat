@@ -4,12 +4,17 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { AboutComponent } from './pages/about/about.component';
 import { FeaturesComponent } from './pages/features/features.component';
+import { VerifyEmailComponent } from './pages/verify-email/verify-email.component';
+import { authGuard, guestOnlyGuard, emailVerifiedGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent, canActivate: [guestOnlyGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [guestOnlyGuard] },
+  { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'about', component: AboutComponent },
   { path: 'features', component: FeaturesComponent },
+  // Add protected routes here that require authentication with authGuard
+  // For example: { path: 'chat', component: ChatComponent, canActivate: [authGuard, emailVerifiedGuard] },
   { path: '**', redirectTo: '' } // Redirect to landing for any unknown routes
 ];

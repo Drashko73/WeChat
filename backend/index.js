@@ -3,12 +3,16 @@ const config = require("./common/config");
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const mongoose = require('mongoose');
+const configureCors = require('./middlewares/cors');
 const { cleanupVerificationCodesJob } = require('./jobs/cleanupVerificationCodesJob');
 const { cleanupRefreshTokensJob } = require('./jobs/cleanupRefreshTokensJob');
 const { cleanupPasswordResetCodesJob } = require('./jobs/cleanupPasswordResetCodesJob');
 const initializePassport = require('./middlewares/passport');
 
 const app = express();
+
+// Apply CORS middleware
+app.use(configureCors());
 
 // Swagger setup
 if (config.SWAGGER_ENABLED === 'true') {
