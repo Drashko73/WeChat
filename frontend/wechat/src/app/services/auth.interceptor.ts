@@ -10,13 +10,14 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
 import { TokenService } from './token.service';
 import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService, private authService: AuthService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Get device ID from localStorage
@@ -97,6 +98,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           
           // If refresh fails, handle logout or redirect to login
+          this.authService.logout();
           return throwError(() => error);
         })
       );

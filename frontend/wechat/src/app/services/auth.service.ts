@@ -101,11 +101,11 @@ export class AuthService {
         const user = this.parseJwt(token);
         if (user) {
           const userInfo: User = {
-            id: user.sub || user.user_id || '',
+            id: user.sub || user.user_id || user.id || '',
             email: user.email || '',
             username: user.username || '',
             fullName: user.full_name || user.name || '',
-            emailConfirmed: user.email_verified || false,
+            emailConfirmed: user.email_confirmed || false,
             isDeleted: user.is_deleted || false,
             createdAt: user.created_at || '',
             updatedAt: user.updated_at || ''
@@ -165,7 +165,7 @@ export class AuthService {
         const user = this.parseJwt(response.access_token);
         if (user) {
           const userInfo: User = {
-            id: user.sub || user.user_id || user._id || '',
+            id: user.sub || user.user_id || user.id || '',
             email: user.email || '',
             username: user.username || '',
             fullName: user.full_name || user.name || '',

@@ -119,7 +119,7 @@ export class TokenService {
     }
     
     // Send the refresh token to the server to get a new access token
-    return this.http.post<TokenResponse>(`${this.apiUrl}/auth/refresh-token`, {
+    return this.http.post<TokenResponse>(`${this.apiUrl}/auth/refresh`, {
       refresh_token: refreshToken
     }).pipe(
       tap((response) => {
