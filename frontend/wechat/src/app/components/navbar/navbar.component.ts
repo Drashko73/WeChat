@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -39,13 +40,54 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       transition('closed <=> open', [
         animate('200ms ease-in-out')
       ])
+    ]),
+    trigger('userDropdownAnimation', [
+      state('open', style({
+        opacity: 1,
+        transform: 'translateY(0)',
+        visibility: 'visible'
+      })),
+      state('closed', style({
+        opacity: 0,
+        transform: 'translateY(-10px)',
+        visibility: 'hidden'
+      })),
+      transition('closed => open', [
+        animate('200ms ease-out')
+      ]),
+      transition('open => closed', [
+        animate('150ms ease-in')
+      ])
     ])
   ]
 })
 export class NavbarComponent {
   isMobileMenuOpen = false;
+  isUserMenuOpen = false;
+  
+  constructor(public authService: AuthService) {}
+  
+  // Use the currentUser observable from AuthService
+  get currentUser$() {
+    return this.authService.currentUser;
+  }
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    
+    // Close user menu if it's open
+    if (this.isMobileMenuOpen && this.isUserMenuOpen) {
+      this.isUserMenuOpen = false;
+    }
+  }
+  
+  toggleUserMenu(): void {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+  
+  logout(): void {
+    this.authService.logout();
+    this.isUserMenuOpen = false;
+    this.isMobileMenuOpen = false;
   }
 }

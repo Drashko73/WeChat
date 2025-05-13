@@ -7,6 +7,7 @@ import { FeaturesComponent } from './pages/features/features.component';
 import { VerifyEmailComponent } from './pages/verify-email/verify-email.component';
 import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard, guestOnlyGuard, emailVerifiedGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -18,7 +19,8 @@ export const routes: Routes = [
   { path: 'features', component: FeaturesComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
-  // Add protected routes here that require authentication with authGuard
-  // For example: { path: 'chat', component: ChatComponent, canActivate: [authGuard, emailVerifiedGuard] },
+  // Protected route that requires authentication
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+  // Add more protected routes here that require authentication with authGuard
   { path: '**', redirectTo: '' } // Redirect to landing for any unknown routes
 ];
