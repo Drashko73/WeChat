@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Wechat - Real Time Communication</title>
+  <meta name="description" content="WeChat - Real Time Communication App">
+  <meta name="author" content="Radovan Drašković">
+  <meta name="keywords" content="WeChat, Real Time Communication, Chat App, Messaging, Social Media, Angular, Web App, Responsive Design, Dark Mode, User Experience, UI/UX, Web Development, Full Stack Development">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Different sizes of favicon icons -->
+  <link rel="icon" type="image/png" sizes="512x512" href="favicons/favicon512.png">
+  <link rel="icon" type="image/png" sizes="256x256" href="favicons/favicon256.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="favicons/favicon128.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="favicons/favicon64.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon32.png">
+  <link rel="icon" type="image/png" sizes="24x24" href="favicons/favicon24.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon16.png">
+
+  <script>
+    // Immediately check and apply the theme to avoid flickering
+    (function() {
+      const savedTheme = localStorage.getItem('theme-preference');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (savedTheme === 'system' && prefersDark) || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

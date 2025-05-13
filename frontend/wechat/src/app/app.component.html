@@ -1,0 +1,7 @@
+<app-navbar></app-navbar>
+<main class="min-h-[calc(100vh-12rem)] relative">
+  <div class="w-full"> <!-- [@routeAnimations]="prepareRoute(outlet)"-->
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
+</main>
+<app-footer></app-footer>

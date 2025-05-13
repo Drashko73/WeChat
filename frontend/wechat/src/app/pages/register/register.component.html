@@ -1,0 +1,236 @@
+<div class="min-h-[calc(100vh-12rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:py-10 sm:px-6 lg:py-12 lg:px-8" [@fadeIn]>
+  <div class="max-w-md w-full space-y-6 sm:space-y-8" [@fadeInUp]>
+    <div class="text-center">
+      <h2 class="mt-2 sm:mt-6 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
+        Create your account
+      </h2>
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        Or
+        <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+          sign in to your existing account
+        </a>
+      </p>
+    </div>
+    
+    <div *ngIf="errorMessage" class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 my-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-red-700 dark:text-red-200">{{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="successMessage" class="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 p-4 my-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-green-700 dark:text-green-200">{{ successMessage }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <form class="mt-6 sm:mt-8 space-y-4 sm:space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()" [@staggerFadeIn]>
+      <div class="rounded-md shadow-lg space-y-3 p-2">
+        <div>
+          <label for="fullName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            formControlName="fullName"
+            required
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 text-sm transition-colors"
+            placeholder="Full Name"
+          />
+          <div *ngIf="registerForm.get('fullName')?.invalid && (registerForm.get('fullName')?.dirty || registerForm.get('fullName')?.touched)" class="text-red-500 text-xs mt-1">
+            <div *ngIf="registerForm.get('fullName')?.errors?.['required']">Full name is required.</div>
+            <div *ngIf="registerForm.get('fullName')?.errors?.['pattern']">Please enter a valid full name (e.g., First Last with capital letters). Use ASCII characters only.</div>
+          </div>
+        </div>
+
+        <!-- Profile Picture Upload Section -->
+        <div>
+          <label for="profilePic" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Profile Picture (Optional)</label>
+          <div class="mt-1 flex items-center">
+            <!-- Profile picture preview -->
+            <div *ngIf="profilePicPreview" class="relative mr-3">
+              <img [src]="profilePicPreview" alt="Profile preview" class="h-16 w-16 rounded-full object-cover" />
+              <button 
+                type="button" 
+                (click)="clearProfilePic()" 
+                class="absolute -top-2 -right-2 rounded-full bg-red-500 text-white p-1 w-5 h-5 flex items-center justify-center text-xs"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <!-- Placeholder when no image is selected -->
+            <div *ngIf="!profilePicPreview" class="mr-3 h-16 w-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              <svg class="h-8 w-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              </svg>
+            </div>
+            
+            <!-- Upload button -->
+            <label for="profilePic" class="cursor-pointer py-2 px-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400">
+              Upload Photo
+            </label>
+            <input 
+              id="profilePic" 
+              name="profilePic" 
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              class="sr-only"
+              (change)="onProfilePicChange($event)"
+            />
+          </div>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">PNG and JPG files are allowed.</p>
+        </div>
+        
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email address</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            required
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
+            placeholder="Email address"
+          />
+          <div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
+            <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</div>
+            <div *ngIf="registerForm.get('email')?.errors?.['email'] || registerForm.get('email')?.errors?.['pattern']">Please enter a valid email address.</div>
+          </div>
+        </div>
+        
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            formControlName="username"
+            required
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
+            placeholder="Username"
+          />
+          <div *ngIf="registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)" class="text-red-500 text-xs mt-1">
+            <div *ngIf="registerForm.get('username')?.errors?.['required']">Username is required.</div>
+            <div *ngIf="registerForm.get('username')?.errors?.['minlength']">Username must be at least 4 characters.</div>
+            <div *ngIf="registerForm.get('username')?.errors?.['pattern']">Username can only contain uppercase letters, numbers, underscore, and period.</div>
+          </div>
+        </div>
+        
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            formControlName="password"
+            required
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
+            placeholder="Password"
+          />
+          <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)" class="text-red-500 text-xs mt-1">
+            <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
+            <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</div>
+            <div *ngIf="registerForm.get('password')?.errors?.['maxlength']">Password cannot exceed 50 characters.</div>
+            <div *ngIf="registerForm.get('password')?.errors?.['weakPassword']">
+              Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            formControlName="confirmPassword"
+            required
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
+            placeholder="Confirm Password"
+          />
+          <div *ngIf="registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched)" class="text-red-500 text-xs mt-1">
+            <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password.</div>
+          </div>
+          <div *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched" class="text-red-500 text-xs mt-1">
+            Passwords do not match.
+          </div>
+          <div *ngIf="registerForm.errors?.['passwordContainsUsername'] && registerForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
+            Password should not contain parts of your username.
+          </div>
+          <div *ngIf="registerForm.errors?.['passwordContainsFullName'] && registerForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
+            Password should not contain parts of your full name.
+          </div>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <div class="flex items-center h-5">
+          <input
+            id="termsAndConditions"
+            name="termsAndConditions"
+            type="checkbox"
+            formControlName="termsAndConditions"
+            required
+            class="h-4 w-4 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-400 border-gray-300 dark:border-gray-600 rounded"
+          />
+        </div>
+        <div class="ml-2 text-sm">
+          <label for="termsAndConditions" class="text-gray-900 dark:text-gray-300">
+            I agree to the
+            <a routerLink="/terms-of-service" type="button" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 underline">Terms of Service</a>
+            and
+            <a routerLink="/privacy-policy" type="button" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 underline">Privacy Policy</a>
+          </label>
+        </div>
+      </div>
+      <div *ngIf="registerForm.get('termsAndConditions')?.invalid && (registerForm.get('termsAndConditions')?.dirty || registerForm.get('termsAndConditions')?.touched)" class="text-red-500 text-xs">
+        <div *ngIf="registerForm.get('termsAndConditions')?.errors?.['required']">You must agree to the terms and conditions.</div>
+      </div>
+      <div class="mt-2">
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid || isLoading"
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            <svg *ngIf="!isLoading"
+              class="h-4 w-4 sm:h-5 sm:w-5 text-indigo-500 group-hover:text-indigo-400"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <div *ngIf="isLoading" class="animate-spin h-5 w-5 text-indigo-500">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+          </span>
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

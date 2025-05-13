@@ -1,0 +1,93 @@
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-900 dark:to-purple-950 text-white transition-colors">
+  <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 sm:py-16 lg:py-24 lg:px-8" [@fadeInAnimation]>
+    <div class="flex flex-col md:flex-row items-center">
+      <div class="w-full md:w-1/2 mb-8 md:mb-0">
+        <div [@staggerFadeIn]>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
+            Connect Instantly With WeChat
+          </h1>
+          <p class="text-base sm:text-lg mb-6 opacity-90">
+            Experience real-time communication like never before. Chat, share, connect with friends and family around the world.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a routerLink="/register" class="bg-white dark:bg-gray-800 text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium shadow-md text-sm sm:text-base transition-colors">
+              Get Started Free
+            </a>
+            <a routerLink="/login" class="border border-white hover:bg-white/10 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base transition-colors">
+              Sign In
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 px-4">
+        <img src="https://placehold.co/600x400/indigo/white?text=WeChat+App" alt="WeChat Application Preview" class="rounded-lg shadow-2xl w-full max-w-md mx-auto" draggable="false">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Preview Section -->
+<section class="py-10 sm:py-14 lg:py-16 bg-gray-50 dark:bg-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10 sm:mb-14">
+      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Why Choose WeChat?</h2>
+      <p class="mt-3 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Experience the power of real-time connections with these amazing features</p>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+      <!-- Feature 1 -->
+      <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Real-time Chat</h3>
+        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Experience seamless real-time communication with friends and family, with instant message delivery.</p>
+      </div>
+        <!-- Feature 2 -->
+      <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Friend Requests</h3>
+        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Easily find and connect with friends through our intuitive friend request system.</p>
+      </div>
+        <!-- Feature 3 -->
+      <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Secure Messaging</h3>
+        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Your conversations are protected with end-to-end encryption for maximum privacy and security.</p>
+      </div>
+    </div>
+    
+    <div class="text-center mt-8 sm:mt-10">
+      <a routerLink="/features" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base">
+        Discover All Features
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="bg-indigo-700 dark:bg-indigo-800 text-white py-10 sm:py-14 lg:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Ready to join WeChat?</h2>
+    <p class="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90">Create your free account and start connecting with friends today.</p>
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-4">
+      <a routerLink="/register" class="bg-white text-indigo-600 hover:bg-gray-100 px-5 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base lg:text-lg shadow-md">
+        Sign Up Now
+      </a>
+      <a routerLink="/login" class="border border-white hover:bg-white/10 px-5 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base lg:text-lg">
+        Login
+      </a>
+    </div>
+  </div>
+</section>
