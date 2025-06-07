@@ -67,7 +67,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const authUrls = [
       `${environment.apiUrl}/auth/login`,
       `${environment.apiUrl}/auth/register`,
-      `${environment.apiUrl}/auth/refresh-token`
+      `${environment.apiUrl}/auth/refresh`
     ];
     return authUrls.some(authUrl => url.includes(authUrl));
   }
