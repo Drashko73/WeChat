@@ -78,11 +78,11 @@ async function sendVerificationCode(email) {
   // Check if verification code already exists
   // and it is not expired nor used
   // In this case, delete the old code
-  const oldCode = await VerificationCode.findOne({ email });
+  const oldCode = await VerificationCode.findOne({ userId: user._id });
   if (oldCode) {
     const now = new Date();
     if (oldCode.expiresAt > now && !oldCode.used) {
-      await VerificationCode.deleteOne({ email });
+      await VerificationCode.deleteOne({ userId: user._id });
     }
   }
 
@@ -94,7 +94,7 @@ async function sendVerificationCode(email) {
   // Set expiration
   const expiresAt = new Date(Date.now() + parseInt(config.VERIFICATION_CODE_EXPIRATION_MINUTES, 10) * 60000);
   // Save to DB
-  await VerificationCode.create({ email, code: encryptedCode, expiresAt });
+  await VerificationCode.create({ userId: user._id, code: encryptedCode, expiresAt });
   // Send code via email
   emailSender.sendVerificationCodeEmail(email, code).catch(console.error);
 
@@ -132,7 +132,7 @@ async function confirmEmail(email, code) {
   }
 
   // Check if verification code exists
-  const verificationCode = await VerificationCode.findOne({ email: email });
+  const verificationCode = await VerificationCode.findOne({ userId: user._id });
   if (!verificationCode) {
     return { error: 'Verification code not found', status: 404 };
   }
@@ -328,11 +328,11 @@ async function requestPasswordReset(email) {
 
   // Check if password reset code already exists and is not expired nor used
   // In this case, delete the old code
-  const oldCode = await PasswordResetCode.findOne({ email: email });
+  const oldCode = await PasswordResetCode.findOne({ userId: user._id });
   if (oldCode) {
     const now = new Date();
     if (oldCode.expiresAt > now && !oldCode.used) {
-      await PasswordResetCode.deleteOne({ email: email });
+      await PasswordResetCode.deleteOne({ userId: user._id });
     }
   }
 
@@ -348,7 +348,7 @@ async function requestPasswordReset(email) {
   const expiresAt = new Date(Date.now() + expirationMinutes * 60000);
   
   // Save to DB
-  await PasswordResetCode.create({ email: email, code: encryptedCode, expiresAt });
+  await PasswordResetCode.create({ userId: user._id, code: encryptedCode, expiresAt });
   
   // Send code via email
   emailSender.sendPasswordResetCodeEmail(email, code, expirationMinutes).catch(console.error);
@@ -392,7 +392,7 @@ async function resetPassword(email, code, newPassword) {
   }
 
   // Check if password reset code exists
-  const passwordResetCode = await PasswordResetCode.findOne({ email });
+  const passwordResetCode = await PasswordResetCode.findOne({ userId: user._id });
   if (!passwordResetCode) {
     return { error: 'Password reset code not found', status: 404 };
   }

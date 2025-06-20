@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const verificationCodeSchema = new mongoose.Schema({
-  email: { type: String, required: true, index: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   code: { type: String, required: true }, // Encrypted
   expiresAt: { type: Date, required: true },
   used: { type: Boolean, default: false },
