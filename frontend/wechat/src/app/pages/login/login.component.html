@@ -44,6 +44,7 @@
             required
             class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 focus:z-10 text-sm transition-colors"
             placeholder="Email address"
+            spellcheck="false"
           />
           <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
             <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
@@ -61,6 +62,7 @@
             required
             class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 focus:z-10 text-sm transition-colors"
             placeholder="Password"
+            spellcheck="false"
           />
           <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="text-red-500 text-xs mt-1">
             <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
@@ -76,6 +78,7 @@
             name="remember-me"
             type="checkbox"
             formControlName="rememberMe"
+            spellcheck="false"
             class="h-4 w-4 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-400 border-gray-300 dark:border-gray-600 rounded"
           />
           <label for="remember-me" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">

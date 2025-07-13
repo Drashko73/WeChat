@@ -47,6 +47,7 @@
           [disabled]="codeSent"
           class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors disabled:opacity-70"
           placeholder="Email address"
+          spellcheck="false"
         />
         <div *ngIf="verificationForm.get('email')?.invalid && (verificationForm.get('email')?.dirty || verificationForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
           <div *ngIf="verificationForm.get('email')?.errors?.['required']">Email is required.</div>
@@ -83,6 +84,7 @@
             maxlength="6"
             class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm transition-colors"
             placeholder="Enter 6-digit code"
+            spellcheck="false"
           />
           <div *ngIf="verificationForm.get('verificationCode')?.invalid && (verificationForm.get('verificationCode')?.dirty || verificationForm.get('verificationCode')?.touched)" class="text-red-500 text-xs mt-1">
             <div *ngIf="verificationForm.get('verificationCode')?.errors?.['required']">Verification code is required.</div>
