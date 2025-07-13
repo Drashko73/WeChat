@@ -88,6 +88,7 @@ UserSchema.methods.generateAccessToken = function() {
     email: this.email,
     username: this.username,
     full_name: this.full_name,
+    profile_pic_path: this.profile_pic_path,
     email_confirmed: this.email_confirmed,
     is_deleted: this.is_deleted,
     created_at: this.created_at,

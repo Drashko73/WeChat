@@ -41,4 +41,59 @@ router.use(authenticateJWT);
  */
 router.get('/search', userController.searchUsers);
 
+/**
+ * @swagger
+ * /api/users/profile:
+ *   get:
+ *     summary: Get current user profile
+ *     description: Get the current authenticated user's profile information
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "64a7b8c9d1e2f3a4b5c6d7e8"
+ *                     username:
+ *                       type: string
+ *                       example: "johndoe"
+ *                     full_name:
+ *                       type: string
+ *                       example: "John Doe"
+ *                     email:
+ *                       type: string
+ *                       example: "johndoe@example.com"
+ *                     profile_picture:
+ *                       type: string
+ *                       nullable: true
+ *                       example: "uploads/profile_pics/1234567890-123456789.jpg"
+ *                     email_confirmed:
+ *                       type: boolean
+ *                       example: true
+ *                     created_at:
+ *                       type: string
+ *                       format: date-time
+ *                     updated_at:
+ *                       type: string
+ *                       format: date-time
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/profile', userController.getCurrentUserProfile);
+
 module.exports = router;

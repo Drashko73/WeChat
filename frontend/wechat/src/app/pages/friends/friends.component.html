@@ -78,9 +78,11 @@
           <div class="p-4">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xl font-bold">
-                  {{ friend.full_name.charAt(0) }}
-                </div>
+                <app-profile-picture 
+                  [profilePicture]="friend.profile_picture"
+                  [fullName]="friend.full_name"
+                  size="md">
+                </app-profile-picture>
               </div>
               <div class="ml-4 flex-1">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ friend.full_name }}</h3>
@@ -172,9 +174,11 @@
           <div class="p-4">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xl font-bold">
-                  {{ request.sender.full_name.charAt(0) }}
-                </div>
+                <app-profile-picture 
+                  [profilePicture]="request.sender.profile_picture"
+                  [fullName]="request.sender.full_name"
+                  size="md">
+                </app-profile-picture>
               </div>
               <div class="ml-4 flex-1">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ request.sender.full_name }}</h3>
@@ -247,9 +251,11 @@
           <div class="p-4">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xl font-bold">
-                  {{ request.receiver.full_name.charAt(0) }}
-                </div>
+                <app-profile-picture 
+                  [profilePicture]="request.receiver.profile_picture"
+                  [fullName]="request.receiver.full_name"
+                  size="md">
+                </app-profile-picture>
               </div>
               <div class="ml-4 flex-1">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ request.receiver.full_name }}</h3>
@@ -339,9 +345,11 @@
           <div class="p-4">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xl font-bold">
-                  {{ user.full_name.charAt(0) }}
-                </div>
+                <app-profile-picture 
+                  [profilePicture]="user.profile_picture"
+                  [fullName]="user.full_name"
+                  size="md">
+                </app-profile-picture>
               </div>
               <div class="ml-4 flex-1">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ user.full_name }}</h3>

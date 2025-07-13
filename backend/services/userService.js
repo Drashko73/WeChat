@@ -38,7 +38,7 @@ class UserService {
       const total = await User.countDocuments(query);
       
       const users = await User.find(query)
-        .select('_id username full_name profile_picture')
+        .select('_id username full_name profile_pic_path')
         .skip((page - 1) * limit)
         .limit(limit);
       
@@ -50,7 +50,7 @@ class UserService {
           id: user._id,
           username: user.username,
           full_name: user.full_name,
-          profile_picture: user.profile_picture || null,
+          profile_picture: user.profile_pic_path || null,
           friendStatus: status
         };
       }));
@@ -96,6 +96,21 @@ class UserService {
       return 'request-sent';
     } else {
       return 'request-received';
+    }
+  }
+
+  /**
+   * Get user by ID
+   * @param {String} userId - User ID
+   * @returns {Object} - User object or null
+   */
+  async getUserById(userId) {
+    try {
+      const user = await User.findById(userId);
+      return user;
+    } catch (error) {
+      console.error('Error in getUserById:', error);
+      return null;
     }
   }
 }

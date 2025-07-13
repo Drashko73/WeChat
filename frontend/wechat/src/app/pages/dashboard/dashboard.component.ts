@@ -7,11 +7,12 @@ import { Observable } from 'rxjs';
 import { User } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { ProfilePictureComponent } from '../../components/profile-picture/profile-picture.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProfilePictureComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   animations: [fadeIn]

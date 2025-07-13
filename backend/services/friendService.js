@@ -110,8 +110,8 @@ class FriendService {
 
       // Find the request and check if it exists and is pending
       const friendRequest = await FriendRequest.findById(requestId).populate([
-        { path: 'sender', select: '_id username full_name profile_picture' },
-        { path: 'receiver', select: '_id username full_name profile_picture' }
+        { path: 'sender', select: '_id username full_name profile_pic_path' },
+        { path: 'receiver', select: '_id username full_name profile_pic_path' }
       ]);
       
       if (!friendRequest) {
@@ -262,7 +262,7 @@ class FriendService {
         });
       }
       
-      const friends = await friendsQuery.select('_id username full_name profile_picture status last_active');
+      const friends = await friendsQuery.select('_id username full_name profile_pic_path status last_active');
       
       // Map friendship data to friends
       const friendsWithDetails = friends.map(friend => {
@@ -351,8 +351,8 @@ class FriendService {
 
       // Find the request with populated sender and receiver
       const friendRequest = await FriendRequest.findById(requestId)
-        .populate('sender', 'username full_name profile_picture')
-        .populate('receiver', 'username full_name profile_picture');
+        .populate('sender', 'username full_name profile_pic_path')
+        .populate('receiver', 'username full_name profile_pic_path');
       
       if (!friendRequest) {
         return { success: false, error: 'Friend request not found', status: 404 };

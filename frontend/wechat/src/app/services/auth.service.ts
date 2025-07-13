@@ -32,6 +32,7 @@ export interface User {
   email: string;
   username: string;
   fullName: string;
+  profilePicture?: string | null;
   emailConfirmed: boolean;
   isDeleted: boolean;
   createdAt: string;
@@ -105,6 +106,7 @@ export class AuthService {
             email: user.email || '',
             username: user.username || '',
             fullName: user.full_name || user.name || '',
+            profilePicture: user.profile_pic_path || null,
             emailConfirmed: user.email_confirmed || false,
             isDeleted: user.is_deleted || false,
             createdAt: user.created_at || '',
@@ -302,5 +304,17 @@ export class AuthService {
     // Note: We keep the device_id for future logins
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  /**
+   * Get the full URL for a profile picture
+   * @param profilePicPath The relative path to the profile picture
+   * @returns The full URL or null if no path provided
+   */
+  getProfilePictureUrl(profilePicPath: string | null | undefined): string | null {
+    if (!profilePicPath) {
+      return null;
+    }
+    return `${this.apiUrl}/${profilePicPath}`;
   }
 }

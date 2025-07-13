@@ -64,9 +64,12 @@
                 (click)="toggleUserMenu()" 
                 class="flex items-center text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white mr-2">
-                  {{ (currentUser$ | async)?.fullName?.charAt(0) || 'U' }}
-                </div>
+                <app-profile-picture 
+                  [profilePicture]="(currentUser$ | async)?.profilePicture"
+                  [fullName]="(currentUser$ | async)?.fullName || ''"
+                  size="sm"
+                  class="mr-2">
+                </app-profile-picture>
                 <span>{{ (currentUser$ | async)?.username }}</span>
                 <svg class="ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -163,9 +166,12 @@
         <ng-template #mobileAuthenticatedUser>
           <!-- User info for mobile -->
           <div class="px-3 py-2 flex items-center text-white">
-            <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white mr-2">
-              {{ (currentUser$ | async)?.fullName?.charAt(0) || 'U' }}
-            </div>
+            <app-profile-picture 
+              [profilePicture]="(currentUser$ | async)?.profilePicture"
+              [fullName]="(currentUser$ | async)?.fullName || ''"
+              size="sm"
+              class="mr-2">
+            </app-profile-picture>
             <span>{{ (currentUser$ | async)?.username }}</span>
           </div>
           

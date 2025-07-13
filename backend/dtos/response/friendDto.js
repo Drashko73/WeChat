@@ -6,7 +6,7 @@ class FriendDto {
     this.id = user._id;
     this.username = user.username;
     this.full_name = user.full_name;
-    this.profile_picture = user.profile_picture || null;
+    this.profile_picture = user.profile_pic_path || null;
     this.status = user.status || 'offline';
     this.lastSeen = user.last_active || null;
     

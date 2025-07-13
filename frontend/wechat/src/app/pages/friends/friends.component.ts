@@ -6,6 +6,7 @@ import { FriendService, Friend, FriendRequest, PaginatedResponse } from '../../s
 import { UserService, UserSearchResult } from '../../services/user.service';
 import { NotificationService } from '../../services/notification.service';
 import { RealTimeService } from '../../services/real-time.service';
+import { ProfilePictureComponent } from '../../components/profile-picture/profile-picture.component';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -13,7 +14,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 @Component({
   selector: 'app-friends',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ProfilePictureComponent],
   templateUrl: './friends.component.html',
   styleUrls: ['./friends.component.css'],
   animations: [

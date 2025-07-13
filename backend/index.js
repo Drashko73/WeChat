@@ -58,6 +58,10 @@ if (config.SWAGGER_ENABLED === 'true') {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files for profile pictures
+const path = require('path');
+app.use('/api/uploads/', express.static(path.join(__dirname, 'uploads')));
+
 // Initialize Passport
 const passport = initializePassport();
 app.use(passport.initialize());

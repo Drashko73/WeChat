@@ -19,7 +19,7 @@ class FriendRequestDto {
           id: friendRequest.sender._id ? friendRequest.sender._id.toString() : undefined,
           username: friendRequest.sender.username,
           full_name: friendRequest.sender.full_name,
-          profile_picture: friendRequest.sender.profile_picture || null
+          profile_picture: friendRequest.sender.profile_pic_path || null
         };
       } else {
         this.sender = friendRequest.sender.toString();
@@ -32,7 +32,7 @@ class FriendRequestDto {
           id: friendRequest.receiver._id ? friendRequest.receiver._id.toString() : undefined,
           username: friendRequest.receiver.username,
           full_name: friendRequest.receiver.full_name,
-          profile_picture: friendRequest.receiver.profile_picture || null
+          profile_picture: friendRequest.receiver.profile_pic_path || null
         };
       } else {
         this.receiver = friendRequest.receiver.toString();

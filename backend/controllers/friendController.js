@@ -108,7 +108,7 @@ class FriendController {
             id: currentUser.id,
             username: currentUser.username,
             full_name: currentUser.full_name,
-            profile_picture: currentUser.profile_picture || null,
+            profile_picture: currentUser.profile_pic_path || null,
             status: 'online',
             lastSeen: new Date().toISOString()
           };
