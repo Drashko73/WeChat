@@ -77,9 +77,19 @@ mongoose.connect(config.MONGO_URI)
     
   // TODO: Seed the database if needed
 
-  // Start the server
-  app.listen(config.PORT, () => {
+  // Start the server with WebSocket support
+  const server = require('http').createServer(app);
+  const initializeWebSocketServer = require('./utils/websocket');
+  
+  // Initialize WebSocket server
+  const websocketServer = initializeWebSocketServer(server);
+  
+  // Make WebSocket server available globally
+  global.websocketServer = websocketServer;
+  
+  server.listen(config.PORT, () => {
     console.log(`Server is running on port ${config.PORT}...`);
+    console.log(`WebSocket server is running on ws://localhost:${config.PORT}/ws`);
   });
 
   }).catch((err) => {
@@ -91,9 +101,13 @@ mongoose.connect(config.MONGO_URI)
 const healthCheckRouter = require("./routes/healthRoutes");
 const authRouter = require("./routes/authRoutes");
 const protectedRouter = require("./routes/protectedRoutes");
+const friendRouter = require("./routes/friendRoutes");
+const userRouter = require("./routes/userRoutes");
 
 app.use('/api/', healthCheckRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/protected', protectedRouter);
+app.use('/api/friends', friendRouter);
+app.use('/api/users', userRouter);
 
 module.exports = app;

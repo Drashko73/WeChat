@@ -8,18 +8,43 @@
       <!-- Desktop Menu (hidden on mobile) -->
       <div class="hidden md:flex items-center">
         <div class="flex space-x-4 items-center mr-4">
-          <a routerLink="/" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" [routerLinkActiveOptions]="{exact: true}">Home</a>
-          <a routerLink="/features" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600">Features</a>
-          <a routerLink="/about" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600">About</a>
-          
-          <!-- Show Dashboard link when authenticated -->
+          <!-- Navigation links -->
+          <a
+            *ngIf="!authService.isAuthenticated()"
+            routerLink="/" 
+            class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+            [routerLinkActiveOptions]="{exact: true}">
+            Home
+          </a>
+          <a
+            *ngIf="!authService.isAuthenticated()"
+            routerLink="/features"
+            class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+              Features
+            </a>
+          <a
+            *ngIf="!authService.isAuthenticated()"
+            routerLink="/about"
+            class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            About
+          </a>
+
+          <!-- Show protected links when authenticated -->
           <a *ngIf="authService.isAuthenticated()" 
              routerLink="/dashboard" 
              class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
              routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
             Dashboard
           </a>
-          
+          <a *ngIf="authService.isAuthenticated()" 
+             routerLink="/friends" 
+             class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
+             routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            Friends
+          </a>
           <app-theme-toggle></app-theme-toggle>
         </div>
         
@@ -85,10 +110,28 @@
     <!-- Mobile Menu with animations -->
     <div [@dropdownAnimation]="isMobileMenuOpen ? 'open' : 'closed'" class="md:hidden overflow-hidden" id="mobile-menu">
       <div class="px-2 pt-2 pb-3 space-y-1 border-t border-indigo-500 dark:border-indigo-400">        
-        <a routerLink="/" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMobileMenu()">Home</a>
-        <a routerLink="/features" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" (click)="toggleMobileMenu()">Features</a>
-        <a routerLink="/about" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" (click)="toggleMobileMenu()">About</a>
-        
+        <a
+          *ngIf="!authService.isAuthenticated()"
+          routerLink="/"
+          class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+          routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+          [routerLinkActiveOptions]="{exact: true}"
+          (click)="toggleMobileMenu()">
+            Home
+        </a>
+        <a
+          *ngIf="!authService.isAuthenticated()"
+          routerLink="/features"
+          class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+          routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+          (click)="toggleMobileMenu()">Features</a>
+        <a
+          *ngIf="!authService.isAuthenticated()"
+          routerLink="/about"
+          class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+          routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+          (click)="toggleMobileMenu()">About</a>
+
         <!-- Show Dashboard link when authenticated -->
         <a *ngIf="authService.isAuthenticated()" 
            routerLink="/dashboard" 
@@ -97,7 +140,16 @@
            (click)="toggleMobileMenu()">
           Dashboard
         </a>
-        
+
+        <!-- Friends link -->
+        <a *ngIf="authService.isAuthenticated()" 
+           routerLink="/friends" 
+           class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" 
+           routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+           (click)="toggleMobileMenu()">
+          Friends
+        </a>
+
         <div class="px-3 py-2">
           <app-theme-toggle></app-theme-toggle>
         </div>
