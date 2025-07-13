@@ -192,7 +192,7 @@ class FriendService {
     try {
       const query = direction === 'incoming' 
         ? { receiver: userId, status: 'pending' }
-        : { sender: userId };
+        : { sender: userId, status: 'pending' };
       
       const total = await FriendRequest.countDocuments(query);
       
