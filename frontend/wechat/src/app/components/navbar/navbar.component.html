@@ -45,6 +45,12 @@
              routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
             Friends
           </a>
+          <a *ngIf="authService.isAuthenticated()" 
+             routerLink="/profile" 
+             class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
+             routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            Profile
+          </a>
           <app-theme-toggle></app-theme-toggle>
         </div>
         

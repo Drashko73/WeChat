@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { fadeIn, fadeInUp, staggerFadeIn } from '../../animations/animations';
 import { ValidationService } from '../../services/validation.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +25,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +119,21 @@ export class RegisterComponent implements OnInit {
     
     if (fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        this.notificationService.showError('Please select an image file');
+        this.clearProfilePic();
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        this.notificationService.showError('File size must be less than 5MB');
+        this.clearProfilePic();
+        return;
+      }
+      
       this.selectedProfilePic = file;
       
       // Create a preview of the image

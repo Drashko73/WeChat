@@ -113,6 +113,53 @@ class UserService {
       return null;
     }
   }
+
+  /**
+   * Update user profile
+   * @param {String} userId - User ID
+   * @param {Object} updateData - Data to update
+   * @returns {Object} - Updated user data or error
+   */
+  async updateUserProfile(userId, updateData) {
+    try {
+      // Add updated_at timestamp
+      updateData.updated_at = new Date();
+      
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        updateData,
+        { new: true, runValidators: true }
+      );
+      
+      if (!updatedUser) {
+        return { success: false, error: 'User not found', status: 404 };
+      }
+      
+      return {
+        success: true,
+        status: 200,
+        data: {
+          id: updatedUser._id,
+          username: updatedUser.username,
+          full_name: updatedUser.full_name,
+          email: updatedUser.email,
+          profile_picture: updatedUser.profile_pic_path || null,
+          email_confirmed: updatedUser.email_confirmed,
+          created_at: updatedUser.created_at,
+          updated_at: updatedUser.updated_at
+        }
+      };
+    } catch (error) {
+      console.error('Error in updateUserProfile:', error);
+      
+      if (error.name === 'ValidationError') {
+        const errors = Object.values(error.errors).map(err => err.message);
+        return { success: false, error: errors.join(', '), status: 400 };
+      }
+      
+      return { success: false, error: 'Internal server error', status: 500 };
+    }
+  }
 }
 
 module.exports = new UserService();

@@ -90,6 +90,34 @@ export class NotificationService {
   }
 
   /**
+   * Show success notification with just a message
+   */
+  showSuccess(message: string): string {
+    return this.success('Success', message);
+  }
+
+  /**
+   * Show error notification with just a message
+   */
+  showError(message: string): string {
+    return this.error('Error', message);
+  }
+
+  /**
+   * Show info notification with just a message
+   */
+  showInfo(message: string): string {
+    return this.info('Info', message);
+  }
+
+  /**
+   * Show warning notification with just a message
+   */
+  showWarning(message: string): string {
+    return this.warning('Warning', message);
+  }
+
+  /**
    * Generate a unique ID for a notification
    */
   private generateId(): string {

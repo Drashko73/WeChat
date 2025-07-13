@@ -287,12 +287,42 @@ export class AuthService {
   getCurrentUserEmail(): string | null {
     return this.currentUserSubject.value?.email || null;
   }
-  
+
   /**
    * Get the device ID
    */
   getDeviceId(): string | null {
     return localStorage.getItem('device_id');
+  }
+
+  /**
+   * Get current user value synchronously
+   */
+  getCurrentUserValue(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  /**
+   * Update current user information
+   */
+  updateCurrentUser(userData: any): void {
+    const currentUser = this.currentUserSubject.value;
+    if (currentUser) {
+      const updatedUser: User = {
+        ...currentUser,
+        fullName: userData.full_name || currentUser.fullName,
+        profilePicture: userData.profile_picture || currentUser.profilePicture,
+        updatedAt: userData.updated_at || currentUser.updatedAt
+      };
+      
+      this.currentUserSubject.next(updatedUser);
+      
+      // Update localStorage if user data exists there
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+      }
+    }
   }
   
   /**

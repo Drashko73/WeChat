@@ -96,4 +96,68 @@ router.get('/search', userController.searchUsers);
  */
 router.get('/profile', userController.getCurrentUserProfile);
 
+/**
+ * @swagger
+ * /api/users/profile:
+ *   put:
+ *     summary: Update current user profile
+ *     description: Update the current authenticated user's profile information
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               full_name:
+ *                 type: string
+ *                 example: "John Doe"
+ *               profile_picture:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile picture image file
+ *     responses:
+ *       200:
+ *         description: User profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     full_name:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     profile_picture:
+ *                       type: string
+ *                       nullable: true
+ *                     email_confirmed:
+ *                       type: boolean
+ *                     created_at:
+ *                       type: string
+ *                       format: date-time
+ *                     updated_at:
+ *                       type: string
+ *                       format: date-time
+ *       400:
+ *         description: Invalid input or validation error
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+router.put('/profile', userController.uploadProfilePicture, userController.updateProfile);
+
 module.exports = router;

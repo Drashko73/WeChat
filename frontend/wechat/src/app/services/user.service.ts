@@ -13,6 +13,17 @@ export interface UserSearchResult {
   friendStatus: 'none' | 'friends' | 'request-sent' | 'request-received';
 }
 
+export interface UserProfile {
+  id: string;
+  username: string;
+  full_name: string;
+  email: string;
+  profile_picture: string | null;
+  email_confirmed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +43,24 @@ export class UserService {
     return this.http.get<any>(
       `${this.apiUrl}/search?searchTerm=${encodeURIComponent(searchTerm)}&page=${page}&limit=${limit}`
     ).pipe(
+      map(res => res.data)
+    );
+  }
+
+  /**
+   * Get current user's profile information
+   */
+  getCurrentUserProfile(): Observable<UserProfile> {
+    return this.http.get<any>(`${this.apiUrl}/profile`).pipe(
+      map(res => res.data)
+    );
+  }
+
+  /**
+   * Update current user's profile
+   */
+  updateProfile(formData: FormData): Observable<UserProfile> {
+    return this.http.put<any>(`${this.apiUrl}/profile`, formData).pipe(
       map(res => res.data)
     );
   }
