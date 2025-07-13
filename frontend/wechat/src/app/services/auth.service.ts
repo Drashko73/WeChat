@@ -171,6 +171,7 @@ export class AuthService {
             email: user.email || '',
             username: user.username || '',
             fullName: user.full_name || user.name || '',
+            profilePicture: user.profile_pic_path || null,
             emailConfirmed: user.email_confirmed || false,
             isDeleted: user.is_deleted || false,
             createdAt: user.created_at || '',
