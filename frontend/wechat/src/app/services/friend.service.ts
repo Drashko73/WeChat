@@ -203,6 +203,6 @@ export class FriendService {
    * Notify about online users (to be called when a WebSocket message is received)
    */
   notifyOnlineUsers(userId: string): void {
-    console.log('Online users updated:', [userId]);
+    // console.log('Online users updated:', [userId]);
   }
 }

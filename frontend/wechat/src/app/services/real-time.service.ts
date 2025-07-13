@@ -90,7 +90,7 @@ export class RealTimeService {
       this.socket = new WebSocket(wsUrl);
 
       this.socket.onopen = () => {
-        console.log('WebSocket connected');
+        // console.log('WebSocket connected');
         this.connected.next(true);
         
         // Request current online users list after connection
@@ -100,7 +100,7 @@ export class RealTimeService {
       this.socket.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data) as WebSocketMessage;
-          console.log('WebSocket message received:', message);
+          // console.log('WebSocket message received:', message);
           this.messageSubject.next(message);
 
           // Handle specific message types
@@ -111,7 +111,7 @@ export class RealTimeService {
       };
 
       this.socket.onclose = (event) => {
-        console.log('WebSocket disconnected, code:', event.code, 'reason:', event.reason);
+        // console.log('WebSocket disconnected, code:', event.code, 'reason:', event.reason);
         this.connected.next(false);
       };
 
@@ -167,7 +167,7 @@ export class RealTimeService {
   private handleMessage(message: WebSocketMessage) {
     switch (message.type) {
       case 'connection_established':
-        console.log('WebSocket connection established:', message.data);
+        // console.log('WebSocket connection established:', message.data);
         // Process initial online users list if provided
         if (message.data.onlineUsers && Array.isArray(message.data.onlineUsers)) {
           this.processOnlineUsersList(message.data.onlineUsers);
@@ -276,7 +276,7 @@ export class RealTimeService {
    * Process initial online users list from server
    */
   private processOnlineUsersList(onlineUserIds: string[]) {
-    console.log('Processing online users list:', onlineUserIds);
+    // console.log('Processing online users list:', onlineUserIds);
     
     // Clear current online users
     const updatedUsers = new Map<string, OnlineUser>();
@@ -322,7 +322,7 @@ export class RealTimeService {
         label: 'View',
         callback: () => {
           // You can navigate to friends page or handle this as needed
-          console.log('Navigate to friend requests');
+          // console.log('Navigate to friend requests');
         }
       }
     );
@@ -339,7 +339,7 @@ export class RealTimeService {
       {
         label: 'View',
         callback: () => {
-          console.log('Navigate to friends list');
+          // console.log('Navigate to friends list');
         }
       }
     );
