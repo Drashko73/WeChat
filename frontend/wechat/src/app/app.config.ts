@@ -5,7 +5,7 @@ import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@a
 
 import { routes } from './app.routes';
 import { ConfigService } from './services/config.service';
-import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
