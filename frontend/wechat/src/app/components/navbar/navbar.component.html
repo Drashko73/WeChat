@@ -46,6 +46,12 @@
             Friends
           </a>
           <a *ngIf="authService.isAuthenticated()" 
+             routerLink="/messages" 
+             class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
+             routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            Messages
+          </a>
+          <a *ngIf="authService.isAuthenticated()" 
              routerLink="/profile" 
              class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
              routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
@@ -157,6 +163,14 @@
            routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
            (click)="toggleMobileMenu()">
           Friends
+        </a>
+
+        <a *ngIf="authService.isAuthenticated()" 
+           routerLink="/messages" 
+           class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" 
+           routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+           (click)="toggleMobileMenu()">
+          Messages
         </a>
 
         <div class="px-3 py-2">

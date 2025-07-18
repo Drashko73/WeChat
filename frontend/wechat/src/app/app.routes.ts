@@ -11,6 +11,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FriendsComponent } from './pages/friends/friends.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { authGuard, guestOnlyGuard, emailVerifiedGuard } from './guards/auth.guard';
+import { MessagesComponent } from './pages/messages/messages.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   // Protected routes that require authentication
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'friends', component: FriendsComponent, canActivate: [authGuard] },
+  { path: 'messages', component: MessagesComponent, canActivate: [authGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   // Add more protected routes here that require authentication with authGuard
   { path: '**', redirectTo: '' } // Redirect to landing for any unknown routes

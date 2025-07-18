@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { FriendService, FriendRequest, Friend } from './friend.service';
+import { ChatService } from './chat.service';
 import { NotificationService } from './notification.service';
 import { environment } from '../../environments/environment';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
@@ -39,6 +40,7 @@ export class RealTimeService {
   constructor(
     private authService: AuthService,
     private friendService: FriendService,
+    private chatService: ChatService,
     private notificationService: NotificationService
   ) {
     // Connect when authentication state changes
@@ -231,6 +233,70 @@ export class RealTimeService {
         this.showRequestsRemovedNotification(message.data.friendName);
         break;
 
+      // Chat-related message types
+      case 'new_message':
+        // New message received
+        this.chatService.handleNewMessage(message.data.message);
+        this.showNewMessageNotification(message.data.message);
+        break;
+
+      case 'message_edited':
+        // Message was edited
+        this.chatService.handleMessageEdited(message.data.message);
+        break;
+
+      case 'message_deleted':
+        // Message was deleted
+        this.chatService.handleMessageDeleted({
+          messageId: message.data.messageId,
+          chatId: message.data.chatId
+        });
+        break;
+
+      case 'message_reaction_added':
+        // Reaction was added to a message
+        this.chatService.handleMessageReaction({
+          messageId: message.data.messageId,
+          userId: message.data.userId,
+          emoji: message.data.emoji
+        });
+        break;
+
+      case 'messages_read':
+        // Messages were read by someone
+        this.chatService.handleMessagesRead({
+          chatId: message.data.chatId,
+          userId: message.data.userId,
+          messageIds: message.data.messageIds
+        });
+        break;
+
+      case 'user_typing_start':
+        // User started typing
+        this.chatService.handleTypingStart({
+          chatId: message.data.chatId,
+          userId: message.data.userId
+        });
+        break;
+
+      case 'user_typing_stop':
+        // User stopped typing
+        this.chatService.handleTypingStop({
+          chatId: message.data.chatId,
+          userId: message.data.userId
+        });
+        break;
+
+      case 'chat_joined':
+        // Successfully joined a chat
+        // console.log('Joined chat:', message.data.chatId);
+        break;
+
+      case 'chat_left':
+        // Successfully left a chat
+        // console.log('Left chat:', message.data.chatId);
+        break;
+
       default:
         console.warn(`Unknown message type: ${message.type}`);
     }
@@ -386,6 +452,32 @@ export class RealTimeService {
   }
 
   /**
+   * Show notification for new chat message
+   */
+  private showNewMessageNotification(message: any) {
+    // Only show notification if the message is not from the current user
+    // and if the user is not currently viewing this chat
+    const currentUser = this.authService.getCurrentUserValue();
+    const activeChat = this.chatService.getActiveChat();
+    
+    if (message.sender._id !== currentUser?.id && 
+        (!activeChat || activeChat._id !== message.chat)) {
+      this.notificationService.info(
+        'New Message',
+        `${message.sender.full_name}: ${message.content.length > 50 ? message.content.substring(0, 50) + '...' : message.content}`,
+        undefined,
+        {
+          label: 'View',
+          callback: () => {
+            // Navigate to chat - this could be handled by the router
+            // console.log('Navigate to chat:', message.chat);
+          }
+        }
+      );
+    }
+  }
+
+  /**
    * Get messages of a specific type
    */
   getMessagesByType<T>(type: string): Observable<T> {
@@ -413,5 +505,42 @@ export class RealTimeService {
     if (this.connected.value) {
       this.requestOnlineUsers();
     }
+  }
+
+  // Chat-specific WebSocket methods
+
+  /**
+   * Join a chat room for real-time updates
+   */
+  joinChat(chatId: string) {
+    this.send('join_chat', { chatId });
+  }
+
+  /**
+   * Leave a chat room
+   */
+  leaveChat(chatId: string) {
+    this.send('leave_chat', { chatId });
+  }
+
+  /**
+   * Send typing start indicator
+   */
+  startTyping(chatId: string) {
+    this.send('typing_start', { chatId });
+  }
+
+  /**
+   * Send typing stop indicator
+   */
+  stopTyping(chatId: string) {
+    this.send('typing_stop', { chatId });
+  }
+
+  /**
+   * Send message read receipt
+   */
+  sendReadReceipt(chatId: string, messageIds: string[]) {
+    this.send('message_read', { chatId, messageIds });
   }
 }

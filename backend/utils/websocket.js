@@ -14,6 +14,8 @@ function initializeWebSocketServer(server) {
 
   // Store active connections with user IDs
   const connections = new Map();
+  // Store chat room subscriptions: userId -> Set of chatIds
+  const chatSubscriptions = new Map();
 
   wss.on('connection', async (ws, req) => {
     // Extract token from URL query string
@@ -87,6 +89,7 @@ function initializeWebSocketServer(server) {
     ws.on('close', () => {
       if (ws.userId) {
         connections.delete(ws.userId);
+        chatSubscriptions.delete(ws.userId);
         console.log(`WebSocket client disconnected. User ID: ${ws.userId}. Total clients: ${connections.size}`);
         
         // Broadcast offline status to all connected users
@@ -164,6 +167,31 @@ function initializeWebSocketServer(server) {
         console.log('Processing friend_request_cancelled message', data);
         break;
 
+      case 'join_chat':
+        // Handle user joining a chat room
+        handleJoinChat(ws, data);
+        break;
+
+      case 'leave_chat':
+        // Handle user leaving a chat room
+        handleLeaveChat(ws, data);
+        break;
+
+      case 'typing_start':
+        // Handle user starting to type
+        handleTypingStart(ws, data);
+        break;
+
+      case 'typing_stop':
+        // Handle user stopping typing
+        handleTypingStop(ws, data);
+        break;
+
+      case 'message_read':
+        // Handle message read receipts
+        handleMessageRead(ws, data);
+        break;
+
       default:
         console.warn(`Unknown message type: ${type}`);
         ws.send(JSON.stringify({
@@ -171,6 +199,145 @@ function initializeWebSocketServer(server) {
           data: { message: `Unknown message type: ${type}` }
         }));
     }
+  }
+
+  /**
+   * Handle user joining a chat room
+   * @param {Object} ws - WebSocket connection
+   * @param {Object} data - Message data containing chatId
+   */
+  function handleJoinChat(ws, data) {
+    const { chatId } = data;
+    if (!chatId) {
+      ws.send(JSON.stringify({
+        type: 'error',
+        data: { message: 'Chat ID is required to join chat' }
+      }));
+      return;
+    }
+
+    const userId = ws.userId;
+    if (!chatSubscriptions.has(userId)) {
+      chatSubscriptions.set(userId, new Set());
+    }
+    
+    chatSubscriptions.get(userId).add(chatId);
+    
+    console.log(`User ${userId} joined chat ${chatId}`);
+    
+    ws.send(JSON.stringify({
+      type: 'chat_joined',
+      data: { 
+        chatId,
+        timestamp: new Date().toISOString()
+      }
+    }));
+  }
+
+  /**
+   * Handle user leaving a chat room
+   * @param {Object} ws - WebSocket connection
+   * @param {Object} data - Message data containing chatId
+   */
+  function handleLeaveChat(ws, data) {
+    const { chatId } = data;
+    if (!chatId) {
+      ws.send(JSON.stringify({
+        type: 'error',
+        data: { message: 'Chat ID is required to leave chat' }
+      }));
+      return;
+    }
+
+    const userId = ws.userId;
+    if (chatSubscriptions.has(userId)) {
+      chatSubscriptions.get(userId).delete(chatId);
+    }
+    
+    console.log(`User ${userId} left chat ${chatId}`);
+    
+    ws.send(JSON.stringify({
+      type: 'chat_left',
+      data: { 
+        chatId,
+        timestamp: new Date().toISOString()
+      }
+    }));
+  }
+
+  /**
+   * Handle typing start indicator
+   * @param {Object} ws - WebSocket connection
+   * @param {Object} data - Message data containing chatId
+   */
+  function handleTypingStart(ws, data) {
+    const { chatId } = data;
+    if (!chatId) return;
+
+    const userId = ws.userId;
+    
+    // Send typing indicator to other users in the chat
+    sendToChatParticipants(chatId, 'user_typing_start', {
+      userId,
+      chatId,
+      timestamp: new Date().toISOString()
+    }, [userId]); // Exclude the sender
+  }
+
+  /**
+   * Handle typing stop indicator
+   * @param {Object} ws - WebSocket connection
+   * @param {Object} data - Message data containing chatId
+   */
+  function handleTypingStop(ws, data) {
+    const { chatId } = data;
+    if (!chatId) return;
+
+    const userId = ws.userId;
+    
+    // Send typing stop indicator to other users in the chat
+    sendToChatParticipants(chatId, 'user_typing_stop', {
+      userId,
+      chatId,
+      timestamp: new Date().toISOString()
+    }, [userId]); // Exclude the sender
+  }
+
+  /**
+   * Handle message read receipts
+   * @param {Object} ws - WebSocket connection
+   * @param {Object} data - Message data containing chatId and messageIds
+   */
+  function handleMessageRead(ws, data) {
+    const { chatId, messageIds } = data;
+    if (!chatId || !messageIds) return;
+
+    const userId = ws.userId;
+    
+    // Send read receipt to other users in the chat
+    sendToChatParticipants(chatId, 'messages_read', {
+      userId,
+      chatId,
+      messageIds,
+      readAt: new Date().toISOString()
+    }, [userId]); // Exclude the sender
+  }
+
+  /**
+   * Send message to all participants of a chat
+   * @param {String} chatId - Chat ID
+   * @param {String} type - Message type
+   * @param {Object} data - Message data
+   * @param {Array} exclude - Array of user IDs to exclude
+   */
+  function sendToChatParticipants(chatId, type, data, exclude = []) {
+    const excludeSet = new Set(exclude);
+    
+    chatSubscriptions.forEach((chatIds, userId) => {
+      if (chatIds.has(chatId) && !excludeSet.has(userId)) {
+        sendToUser(userId, type, data);
+      }
+    });
   }
 
   /**
@@ -275,7 +442,8 @@ function initializeWebSocketServer(server) {
     sendToUsers,
     broadcast,
     getConnectedUsers,
-    isUserConnected
+    isUserConnected,
+    sendToChatParticipants
   };
 }
 
