@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -626,5 +626,20 @@ export class MessagesComponent implements OnInit, OnDestroy, AfterViewChecked, A
     
     // Clear active chat in service
     this.chatService.setActiveChat(null);
+  }
+
+  // Hotkey close chat
+  @HostListener('window:keydown', ['$event'])
+  onHotkeyCloseChat(event: KeyboardEvent) {
+    if(this.currentChat != null && event.key === 'Escape') {
+      this.closeChat();
+    }
+    if(this.showFriendsList && event.key === 'Escape') {
+      this.toggleFriendsList();
+    }
+    if(!this.showFriendsList && (event.key === 'f' || event.key === 'F') && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      this.toggleFriendsList();
+    }
   }
 }
