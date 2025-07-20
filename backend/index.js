@@ -108,6 +108,7 @@ const protectedRouter = require("./routes/protectedRoutes");
 const friendRouter = require("./routes/friendRoutes");
 const userRouter = require("./routes/userRoutes");
 const chatRouter = require("./routes/chatRoutes");
+const statsRouter = require("./routes/statsRoutes");
 
 app.use('/api/', healthCheckRouter);
 app.use('/api/auth', authRouter);
@@ -115,5 +116,6 @@ app.use('/api/protected', protectedRouter);
 app.use('/api/friends', friendRouter);
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
+app.use('/api/stats', statsRouter);
 
 module.exports = app;
