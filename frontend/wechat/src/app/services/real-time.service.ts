@@ -6,6 +6,7 @@ import { NotificationService } from './notification.service';
 import { environment } from '../../environments/environment';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 export interface WebSocketMessage {
   type: string;
@@ -41,7 +42,8 @@ export class RealTimeService {
     private authService: AuthService,
     private friendService: FriendService,
     private chatService: ChatService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router
   ) {
     // Connect when authentication state changes
     this.authService.currentUser.subscribe((user: any) => {
@@ -389,6 +391,7 @@ export class RealTimeService {
         callback: () => {
           // You can navigate to friends page or handle this as needed
           // console.log('Navigate to friend requests');
+          this.router.navigate(['/friends/'])
         }
       }
     );
@@ -406,6 +409,7 @@ export class RealTimeService {
         label: 'View',
         callback: () => {
           // console.log('Navigate to friends list');
+          this.router.navigate(['/friends/']);
         }
       }
     );
@@ -460,17 +464,17 @@ export class RealTimeService {
     const currentUser = this.authService.getCurrentUserValue();
     const activeChat = this.chatService.getActiveChat();
     
-    if (message.sender._id !== currentUser?.id && 
-        (!activeChat || activeChat._id !== message.chat)) {
+    if (message.sender._id !== currentUser?.id && (!activeChat || activeChat._id !== message.chat) && !this.router.url.includes('messages')) {
       this.notificationService.info(
         'New Message',
         `${message.sender.full_name}: ${message.content.length > 50 ? message.content.substring(0, 50) + '...' : message.content}`,
         undefined,
         {
-          label: 'View',
+          label: 'View Messages',
           callback: () => {
             // Navigate to chat - this could be handled by the router
             // console.log('Navigate to chat:', message.chat);
+            this.router.navigate(['/messages/']);
           }
         }
       );

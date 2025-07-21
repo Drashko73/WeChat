@@ -204,6 +204,7 @@ export class MessagesComponent implements OnInit, OnDestroy, AfterViewChecked, A
           if (message) {
             message.isDeleted = true;
             message.content = '[This message was deleted]';
+            message.attachments = []; // Clear attachments
           }
         }
       })
@@ -636,6 +637,8 @@ export class MessagesComponent implements OnInit, OnDestroy, AfterViewChecked, A
       this.imageLoadingStates.set(attachment.filename, { loading: true, error: false, loaded: false });
     }
     
+    console.log('Url:', url);
+
     return url;
   }
   
