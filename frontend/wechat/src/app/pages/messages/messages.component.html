@@ -262,11 +262,118 @@
               
               <!-- File Attachments -->
               <div class="mt-2 space-y-2" *ngIf="message.attachments && message.attachments.length > 0">
-                <div 
-                  class="flex items-center space-x-2 p-2 rounded-lg bg-black/10 text-sm"
-                  *ngFor="let attachment of message.attachments">
-                  <i class="fas fa-file"></i>
-                  <span class="truncate">{{ attachment.originalName }}</span>
+                <div *ngFor="let attachment of message.attachments" class="attachment-container">
+                  
+                  <!-- Image Attachments -->
+                  <div *ngIf="isImageFile(attachment)" class="relative group">
+                    <!-- Loading indicator -->
+                    <div *ngIf="getImageLoadingState(attachment).loading && !getImageLoadingState(attachment).loaded" 
+                         class="max-w-xs h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                      <div class="text-center text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                        <div class="text-sm">Loading image...</div>
+                      </div>
+                    </div>
+                    
+                    <!-- Actual image -->
+                    <img 
+                      *ngIf="!getImageLoadingState(attachment).error"
+                      [src]="getFileUrl(attachment)" 
+                      [alt]="attachment.originalName"
+                      class="max-w-xs max-h-64 rounded-lg cursor-pointer hover:opacity-90 transition-opacity bg-gray-100"
+                      [class.hidden]="getImageLoadingState(attachment).loading && !getImageLoadingState(attachment).loaded"
+                      (click)="openFilePreview(attachment)"
+                      (error)="onImageError($event, attachment); debugImageUrl(attachment)"
+                      (load)="onImageLoad($event, attachment)"
+                      (loadstart)="debugImageUrl(attachment)"
+                      loading="lazy"
+                    >
+                      
+                    <!-- Image error fallback -->
+                    <div *ngIf="getImageLoadingState(attachment).error" 
+                         class="max-w-xs h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center cursor-pointer" 
+                         (click)="downloadFile(attachment)">
+                      <div class="text-center text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-image text-2xl mb-2"></i>
+                        <div class="text-sm">Image unavailable</div>
+                        <div class="text-xs">Click to download</div>
+                      </div>
+                    </div>
+                    
+                    <!-- Hover overlay for successful images -->
+                    <div *ngIf="getImageLoadingState(attachment).loaded" 
+                         class="absolute inset-0 bg-transparent bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all flex items-center justify-center">
+                      <button 
+                        class="opacity-0 group-hover:opacity-100 bg-white bg-opacity-90 text-gray-800 p-2 rounded-full transition-opacity hover:bg-opacity-100"
+                        (click)="openFilePreview(attachment)"
+                        title="View full size">
+                        <i class="fas fa-expand-alt"></i>
+                      </button>
+                    </div>
+                    
+                    <div class="text-xs text-gray-400 mt-1">
+                      {{ attachment.originalName }} • {{ formatFileSize(attachment.size) }}
+                    </div>
+                  </div>
+
+                  <!-- Video Attachments -->
+                  <div *ngIf="isVideoFile(attachment)" class="relative">
+                    <video 
+                      [src]="getFileUrl(attachment)"
+                      class="max-w-xs max-h-64 rounded-lg"
+                      controls
+                      preload="metadata">
+                      Your browser does not support the video tag.
+                    </video>
+                    <div class="text-xs text-gray-400 mt-1 flex items-center justify-between">
+                      <span>{{ attachment.originalName }}</span>
+                      <span>{{ formatFileSize(attachment.size) }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Audio Attachments -->
+                  <div *ngIf="isAudioFile(attachment)" class="bg-gray-50 dark:bg-gray-600 p-3 rounded-lg max-w-xs">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <i class="fas fa-music text-purple-500"></i>
+                      <span class="text-sm font-medium truncate">{{ attachment.originalName }}</span>
+                    </div>
+                    <audio 
+                      [src]="getFileUrl(attachment)"
+                      class="w-full"
+                      controls
+                      preload="metadata">
+                      Your browser does not support the audio tag.
+                    </audio>
+                    <div class="text-xs text-gray-400 mt-1">{{ formatFileSize(attachment.size) }}</div>
+                  </div>
+
+                  <!-- Document/File Attachments -->
+                  <div *ngIf="!isImageFile(attachment) && !isVideoFile(attachment) && !isAudioFile(attachment)" 
+                       class="bg-gray-50 dark:bg-gray-600 p-3 rounded-lg max-w-xs hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors">
+                    <div class="flex items-center space-x-3">
+                      <i [class]="getFileIcon(attachment) + ' ' + getFileIconColor(attachment) + ' text-xl'"></i>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium truncate">{{ attachment.originalName }}</div>
+                        <div class="text-xs text-gray-400">{{ formatFileSize(attachment.size) }}</div>
+                      </div>
+                      <div class="flex space-x-1">
+                        <button 
+                          class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded transition-colors"
+                          (click)="openFilePreview(attachment)"
+                          title="Preview"
+                          *ngIf="isPdfFile(attachment)">
+                          <i class="fas fa-eye text-sm"></i>
+                        </button>
+                        <button 
+                          class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded transition-colors"
+                          (click)="downloadFile(attachment)"
+                          title="Download">
+                          <i class="fas fa-download text-sm"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
                 </div>
               </div>
             </div>

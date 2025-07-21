@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 
 import { ChatService, Chat, ChatMessage, SendMessageRequest } from '../../services/chat.service';
@@ -10,6 +11,7 @@ import { RealTimeService } from '../../services/real-time.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { ProfilePictureComponent } from '../../components/profile-picture/profile-picture.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-messages',
@@ -66,7 +68,8 @@ export class MessagesComponent implements OnInit, OnDestroy, AfterViewChecked, A
     public authService: AuthService,
     public notificationService: NotificationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -285,6 +288,9 @@ export class MessagesComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this.showJumpToLatest = false;
     this.newMessagesCount = 0;
     this.shouldScrollToBottom = true;
+    
+    // Clear image loading states for new chat
+    this.imageLoadingStates.clear();
 
     // Join new chat
     this.realTimeService.joinChat(chat._id);
@@ -599,6 +605,206 @@ export class MessagesComponent implements OnInit, OnDestroy, AfterViewChecked, A
     return message._id;
   }
 
+  // Cache for file URLs to prevent repeated calculations
+  private _fileUrlCache = new Map<string, string>();
+  
+  // Track image loading states
+  imageLoadingStates = new Map<string, { loading: boolean; error: boolean; loaded: boolean }>();
+
+  // Utility functions for attachments
+  getFileUrl(attachment: any): string {
+    // Use a simple and reliable approach based on the filename
+    // Since we know the backend serves files at /api/uploads/chat_files/
+    if (!attachment || !attachment.filename) {
+      console.error('Attachment missing filename:', attachment);
+      return '';
+    }
+    
+    // Check cache first to prevent repeated URL construction
+    if (this._fileUrlCache.has(attachment.filename)) {
+      return this._fileUrlCache.get(attachment.filename)!;
+    }
+    
+    // Construct the URL directly using the filename
+    const url = `${environment.apiUrl}/uploads/chat_files/${attachment.filename}`;
+    
+    // Cache the result
+    this._fileUrlCache.set(attachment.filename, url);
+    
+    // Initialize loading state
+    if (!this.imageLoadingStates.has(attachment.filename)) {
+      this.imageLoadingStates.set(attachment.filename, { loading: true, error: false, loaded: false });
+    }
+    
+    return url;
+  }
+  
+  // Get sanitized file URL (useful for programmatic access)
+  getSafeFileUrl(attachment: any) {
+    const url = this.getFileUrl(attachment);
+    return url ? this.sanitizer.bypassSecurityTrustUrl(url) : '';
+  }
+  
+  // Get image loading state
+  getImageLoadingState(attachment: any) {
+    return this.imageLoadingStates.get(attachment.filename) || { loading: true, error: false, loaded: false };
+  }
+  
+  // Debug method to help troubleshoot URLs
+  debugImageUrl(attachment: any): void {
+    const url = this.getFileUrl(attachment);
+    // console.log('Debug image URL:', {
+    //   attachment: attachment,
+    //   constructedUrl: url,
+    //   environment: environment,
+    //   backendStaticPath: `${environment.apiUrl}/uploads/chat_files/`,
+    //   filename: attachment.filename
+    // });
+    
+    // Test if URL is accessible by making a HEAD request
+    fetch(url, { method: 'HEAD' })
+      .then(response => {
+        // console.log('URL accessibility test:', {
+        //   url: url,
+        //   status: response.status,
+        //   ok: response.ok,
+        //   headers: Object.fromEntries(response.headers.entries())
+        // });
+      })
+      .catch(error => {
+        console.error('URL accessibility test failed:', {
+          url: url,
+          error: error
+        });
+      });
+  }
+
+  isImageFile(attachment: any): boolean {
+    const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    return imageTypes.includes(attachment.mimetype.toLowerCase());
+  }
+
+  isVideoFile(attachment: any): boolean {
+    const videoTypes = ['video/mp4', 'video/avi', 'video/mov', 'video/wmv', 'video/webm'];
+    return videoTypes.includes(attachment.mimetype.toLowerCase());
+  }
+
+  isAudioFile(attachment: any): boolean {
+    const audioTypes = ['audio/mp3', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/aac'];
+    return audioTypes.includes(attachment.mimetype.toLowerCase());
+  }
+
+  isPdfFile(attachment: any): boolean {
+    return attachment.mimetype.toLowerCase() === 'application/pdf';
+  }
+
+  isDocumentFile(attachment: any): boolean {
+    const docTypes = [
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'text/plain'
+    ];
+    return docTypes.includes(attachment.mimetype.toLowerCase());
+  }
+
+  getFileIcon(attachment: any): string {
+    if (this.isImageFile(attachment)) return 'fas fa-image';
+    if (this.isVideoFile(attachment)) return 'fas fa-video';
+    if (this.isAudioFile(attachment)) return 'fas fa-music';
+    if (this.isPdfFile(attachment)) return 'fas fa-file-pdf';
+    if (this.isDocumentFile(attachment)) return 'fas fa-file-word';
+    return 'fas fa-file';
+  }
+
+  getFileIconColor(attachment: any): string {
+    if (this.isImageFile(attachment)) return 'text-green-500';
+    if (this.isVideoFile(attachment)) return 'text-blue-500';
+    if (this.isAudioFile(attachment)) return 'text-purple-500';
+    if (this.isPdfFile(attachment)) return 'text-red-500';
+    if (this.isDocumentFile(attachment)) return 'text-blue-600';
+    return 'text-gray-500';
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  downloadFile(attachment: any): void {
+    const url = this.getFileUrl(attachment);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = attachment.originalName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  openFilePreview(attachment: any): void {
+    const url = this.getFileUrl(attachment);
+    window.open(url, '_blank');
+  }
+
+  onImageError(event: any, attachment?: any): void {
+    // Handle image loading error by showing a fallback
+    const img = event.target as HTMLImageElement;
+    
+    console.error('Image failed to load:', {
+      src: img.src,
+      naturalWidth: img.naturalWidth,
+      naturalHeight: img.naturalHeight,
+      complete: img.complete,
+      attachment: attachment
+    });
+    
+    // Update loading state if attachment provided
+    if (attachment && attachment.filename) {
+      const currentState = this.imageLoadingStates.get(attachment.filename);
+      this.imageLoadingStates.set(attachment.filename, {
+        ...currentState,
+        loading: false,
+        error: true,
+        loaded: false
+      });
+    }
+  }
+
+  onImageLoad(event: any, attachment?: any): void {
+    // Handle successful image loading
+    const img = event.target as HTMLImageElement;
+    // console.log('Image loaded successfully:', {
+    //   src: img.src,
+    //   naturalWidth: img.naturalWidth,
+    //   naturalHeight: img.naturalHeight,
+    //   dimensions: `${img.width}x${img.height}`,
+    //   attachment: attachment
+    // });
+    
+    // Ensure the image is visible and properly sized
+    if (img.naturalWidth === 0 || img.naturalHeight === 0) {
+      console.warn('Image loaded but has no dimensions, treating as error');
+      this.onImageError(event, attachment);
+      return;
+    }
+    
+    // Update loading state if attachment provided
+    if (attachment && attachment.filename) {
+      this.imageLoadingStates.set(attachment.filename, {
+        loading: false,
+        error: false,
+        loaded: true
+      });
+    }
+  }
+
   closeChat() {
     if (!this.currentChat) return;
     
@@ -611,6 +817,9 @@ export class MessagesComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this.replyToMessage = null;
     this.selectedFiles = null;
     this.newMessageContent = '';
+    
+    // Clear image loading states
+    this.imageLoadingStates.clear();
     
     // Reset scroll state
     this.isUserNearBottom = true;
