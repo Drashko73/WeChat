@@ -1,0 +1,35 @@
+/* Profile Component Styles - Using Tailwind CSS */
+
+/* Remove default browser styles and ensure proper inheritance */
+:host {
+  display: block;
+}
+
+/* Additional custom styles if needed */
+.gradient-text {
+  background: linear-gradient(135deg, rgb(79, 70, 229), rgb(147, 51, 234));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom animation for smooth transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Ensure proper z-index for overlays */
+.overlay {
+  z-index: 9999;
+}
