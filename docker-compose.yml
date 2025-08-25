@@ -1,0 +1,85 @@
+services:
+  # WeChat Backend API
+  wechat-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wechat-backend
+    environment:
+      - NODE_ENV=production
+      - HOST=http://localhost
+      - PORT=3000
+      - SWAGGER_ENABLED=true
+      - MONGO_URI=mongodb://wechat-mongodb:27017/wechat?authSource=admin
+      - SALT_ROUNDS=10
+      - SMTP_USER=
+      - SMTP_PASS=
+      - VERIFICATION_CODE_LENGTH=6
+      - VERIFICATION_CODE_EXPIRATION_MINUTES=5
+      - VERIFICATION_CODE_CLEANUP_INTERVAL_MINUTES=1
+      - FRONTEND_VERIFICATION_URL=http://localhost:4200/verify-email
+      - FRONTEND_LOGIN_URL=http://localhost:4200/login
+      - REFRESH_TOKEN_CLEANUP_INTERVAL_MINUTES=5
+      - JWT_SECRET=
+      - JWT_EXPIRATION_TIME=
+      - JWT_ALGORITHM=
+      - JWT_ISSUER=
+      - REFRESH_TOKEN_EXPIRATION_MINUTES=10080
+      - PASSWORD_RESET_CODE_LENGTH=6
+      - PASSWORD_RESET_CODE_EXPIRATION_MINUTES=5
+      - PASSWORD_RESET_CODE_CLEANUP_INTERVAL_MINUTES=10
+      - CORS_ORIGIN=http://localhost:4200
+      - CORS_METHODS=GET,HEAD,PUT,PATCH,POST,DELETE
+      - CORS_CREDENTIALS=true
+      - CORS_MAX_AGE=86400
+      - CORS_ALLOW_HEADERS=Content-Type,Authorization,X-Requested-With,Accept,Origin,X-Device-ID
+    depends_on:
+      - wechat-mongodb
+    ports:
+      - "3000:3000"
+    volumes:
+      - backend_uploads:/app/uploads
+      - backend_logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - wechat-network
+
+  # MongoDB Database
+  wechat-mongodb:
+    image: mongo:7-jammy
+    container_name: wechat-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=wechat
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    networks:
+      - wechat-network
+
+  # WeChat Frontend
+  wechat-frontend:
+    build:
+      context: ./frontend/wechat
+      dockerfile: Dockerfile
+    container_name: wechat-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - wechat-backend
+    restart: unless-stopped
+    networks:
+      - wechat-network
+
+volumes:
+  mongodb_data:
+    driver: local
+  backend_uploads:
+    driver: local
+  backend_logs:
+    driver: local
+
+networks:
+  wechat-network:
+    driver: bridge

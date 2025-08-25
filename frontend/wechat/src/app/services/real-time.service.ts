@@ -85,10 +85,10 @@ export class RealTimeService {
       return;
     }
 
-    // Extract the domain part of the API URL (remove http:// and path)
-    const apiUrlParts = environment.apiUrl.split('://')[1]?.split('/')[0];
+    // Use the current host (where the frontend is served) for WebSocket connection
+    // This works because nginx proxies /ws to the backend container
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const wsUrl = `${wsProtocol}://${apiUrlParts || 'localhost:5000'}/ws?token=${token}`;
+    const wsUrl = `${wsProtocol}://${window.location.host}/ws?token=${token}`;
 
     try {
       this.socket = new WebSocket(wsUrl);
