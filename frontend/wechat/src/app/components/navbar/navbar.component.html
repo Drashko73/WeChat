@@ -1,0 +1,204 @@
+<nav class="bg-indigo-600 dark:bg-indigo-900 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center">
+        <a routerLink="/" class="text-white dark:text-white font-bold text-xl">WeChat</a>
+      </div>
+      <!-- Desktop Menu (hidden on mobile) -->
+      <div class="hidden md:flex items-center">
+        <div class="flex space-x-4 items-center mr-4">
+          <!-- Navigation links -->
+          <a
+            *ngIf="!authService.isAuthenticated()"
+            routerLink="/" 
+            class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+            [routerLinkActiveOptions]="{exact: true}">
+            Home
+          </a>
+          <a
+            *ngIf="!authService.isAuthenticated()"
+            routerLink="/features"
+            class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+              Features
+            </a>
+          <a
+            *ngIf="!authService.isAuthenticated()"
+            routerLink="/about"
+            class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            About
+          </a>
+
+          <!-- Show protected links when authenticated -->
+          <a *ngIf="authService.isAuthenticated()" 
+             routerLink="/dashboard" 
+             class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
+             routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            Dashboard
+          </a>
+          <a *ngIf="authService.isAuthenticated()" 
+             routerLink="/friends" 
+             class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
+             routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            Friends
+          </a>
+          <a *ngIf="authService.isAuthenticated()" 
+             routerLink="/messages" 
+             class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
+             routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            Messages
+          </a>
+          <a *ngIf="authService.isAuthenticated()" 
+             routerLink="/profile" 
+             class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" 
+             routerLinkActive="bg-indigo-700 dark:bg-indigo-600">
+            Profile
+          </a>
+          <app-theme-toggle></app-theme-toggle>
+        </div>
+        
+        <!-- Auth buttons - show conditionally -->
+        <div class="flex items-center space-x-2">
+          <!-- Show for non-authenticated users -->
+          <ng-container *ngIf="!authService.isAuthenticated(); else authenticatedUser">
+            <a routerLink="/login" class="text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
+            <a routerLink="/register" class="bg-white dark:bg-gray-100 text-indigo-600 hover:bg-gray-100 dark:hover:bg-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Sign Up</a>
+          </ng-container>
+          
+          <!-- Show for authenticated users -->
+          <ng-template #authenticatedUser>
+            <div class="relative">
+              <button 
+                type="button" 
+                (click)="toggleUserMenu()" 
+                class="flex items-center text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                <app-profile-picture 
+                  [profilePicture]="(currentUser$ | async)?.profilePicture"
+                  [fullName]="(currentUser$ | async)?.fullName || ''"
+                  size="sm"
+                  class="mr-2">
+                </app-profile-picture>
+                <span>{{ (currentUser$ | async)?.username }}</span>
+                <svg class="ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+              
+              <!-- User dropdown -->
+              <div 
+                [@userDropdownAnimation]="isUserMenuOpen ? 'open' : 'closed'"
+                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 origin-top-right z-10"
+              >
+                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button">
+                  <a routerLink="/dashboard" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem" (click)="isUserMenuOpen = false">Dashboard</a>
+                  <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem" (click)="isUserMenuOpen = false">Profile</a>
+                  <button (click)="logout()" class="w-full text-left block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">Sign out</button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      
+      <!-- Mobile menu button with animation -->
+      <div class="flex md:hidden items-center">
+        <button type="button" (click)="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-indigo-700 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <div class="relative w-6 h-6" [@rotateAnimation]="isMobileMenuOpen ? 'open' : 'closed'">
+            <!-- Hamburger icon -->
+            <svg *ngIf="!isMobileMenuOpen" class="h-6 w-6 transition-all duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <!-- Close icon -->
+            <svg *ngIf="isMobileMenuOpen" class="h-6 w-6 transition-all duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu with animations -->
+    <div [@dropdownAnimation]="isMobileMenuOpen ? 'open' : 'closed'" class="md:hidden overflow-hidden" id="mobile-menu">
+      <div class="px-2 pt-2 pb-3 space-y-1 border-t border-indigo-500 dark:border-indigo-400">        
+        <a
+          *ngIf="!authService.isAuthenticated()"
+          routerLink="/"
+          class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+          routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+          [routerLinkActiveOptions]="{exact: true}"
+          (click)="toggleMobileMenu()">
+            Home
+        </a>
+        <a
+          *ngIf="!authService.isAuthenticated()"
+          routerLink="/features"
+          class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+          routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+          (click)="toggleMobileMenu()">Features</a>
+        <a
+          *ngIf="!authService.isAuthenticated()"
+          routerLink="/about"
+          class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+          routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+          (click)="toggleMobileMenu()">About</a>
+
+        <!-- Show Dashboard link when authenticated -->
+        <a *ngIf="authService.isAuthenticated()" 
+           routerLink="/dashboard" 
+           class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" 
+           routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+           (click)="toggleMobileMenu()">
+          Dashboard
+        </a>
+
+        <!-- Friends link -->
+        <a *ngIf="authService.isAuthenticated()" 
+           routerLink="/friends" 
+           class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" 
+           routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+           (click)="toggleMobileMenu()">
+          Friends
+        </a>
+
+        <a *ngIf="authService.isAuthenticated()" 
+           routerLink="/messages" 
+           class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" 
+           routerLinkActive="bg-indigo-700 dark:bg-indigo-600"
+           (click)="toggleMobileMenu()">
+          Messages
+        </a>
+
+        <div class="px-3 py-2">
+          <app-theme-toggle></app-theme-toggle>
+        </div>
+        
+        <!-- Auth links for mobile -->
+        <ng-container *ngIf="!authService.isAuthenticated(); else mobileAuthenticatedUser">
+          <a routerLink="/login" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" routerLinkActive="bg-indigo-700 dark:bg-indigo-600" (click)="toggleMobileMenu()">Login</a>
+          <a routerLink="/register" class="bg-white dark:bg-gray-100 text-indigo-600 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-white transition-colors" (click)="toggleMobileMenu()">Sign Up</a>
+        </ng-container>
+        
+        <ng-template #mobileAuthenticatedUser>
+          <!-- User info for mobile -->
+          <div class="px-3 py-2 flex items-center text-white">
+            <app-profile-picture 
+              [profilePicture]="(currentUser$ | async)?.profilePicture"
+              [fullName]="(currentUser$ | async)?.fullName || ''"
+              size="sm"
+              class="mr-2">
+            </app-profile-picture>
+            <span>{{ (currentUser$ | async)?.username }}</span>
+          </div>
+          
+          <a routerLink="/profile" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors" (click)="toggleMobileMenu()">Profile</a>
+          <button (click)="logout()" class="w-full text-left text-red-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors">Sign out</button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav>

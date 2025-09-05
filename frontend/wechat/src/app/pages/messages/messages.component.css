@@ -1,0 +1,170 @@
+/* Messages Component - Using Tailwind CSS */
+
+/* Custom scrollbar styles for webkit browsers */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(243 244 246);
+}
+
+:host-context(.dark) ::-webkit-scrollbar-track {
+  background-color: rgb(31 41 55);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(209 213 219);
+  border-radius: 9999px;
+}
+
+:host-context(.dark) ::-webkit-scrollbar-thumb {
+  background-color: rgb(75 85 99);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(156 163 175);
+}
+
+:host-context(.dark) ::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(107 114 128);
+}
+
+/* Custom animation delays for typing indicator */
+.animate-bounce:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.animate-bounce:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.animate-bounce:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+/* Ensure proper hover states for message groups */
+.group:hover .message-actions {
+  opacity: 1;
+}
+
+/* Auto-resize textarea */
+textarea[rows="1"] {
+  resize: none;
+  overflow: hidden;
+  min-height: 44px;
+}
+
+/* Smooth transitions for mobile sidebar */
+.transform {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Fix for mobile overlay z-index */
+.mobile-overlay {
+  z-index: 50;
+}
+
+.mobile-sidebar {
+  z-index: 51;
+}
+
+/* Attachment styling */
+.attachment-container {
+  transition: all 0.2s ease-in-out;
+}
+
+.attachment-container:hover {
+  transform: translateY(-1px);
+}
+
+/* Image attachment specific styles */
+.attachment-container img {
+  transition: transform 0.2s ease-in-out;
+  background-color: #f3f4f6; /* Light gray background for loading */
+  min-height: 100px; /* Ensure some height while loading */
+  object-fit: cover; /* Ensure proper image scaling */
+}
+
+.attachment-container:hover img {
+  transform: scale(1.02);
+}
+
+/* Ensure images display properly */
+.attachment-container img[src] {
+  display: block !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Custom file type colors */
+.text-file-image {
+  color: #10b981;
+}
+
+.text-file-video {
+  color: #3b82f6;
+}
+
+.text-file-audio {
+  color: #8b5cf6;
+}
+
+.text-file-pdf {
+  color: #ef4444;
+}
+
+.text-file-document {
+  color: #2563eb;
+}
+
+/* Loading animation for images */
+.attachment-loading {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Video controls styling */
+video::-webkit-media-controls-panel {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Audio player styling */
+audio::-webkit-media-controls-panel {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Image error state */
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  min-height: 100px;
+}
+
+.image-error::before {
+  content: "📷 Image failed to load";
+  text-align: center;
+}
+
+/* File type specific colors */
+.text-green-500 { color: #10b981; }
+.text-blue-500 { color: #3b82f6; }
+.text-purple-500 { color: #8b5cf6; }
+.text-red-500 { color: #ef4444; }
+.text-blue-600 { color: #2563eb; }
+.text-gray-500 { color: #6b7280; }
